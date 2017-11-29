@@ -4,20 +4,18 @@
  * and open the template in the editor.
  */
 package rentacar1;
-
-import gui.FrmUser;
-
 /**
  *
  * @author Kendall
  */
+import gui.Login;
 public class RentaCar1 {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        FrmUser vetn = new FrmUser();
+        Login vetn = new Login();
         vetn.setVisible(true);
     }
     
