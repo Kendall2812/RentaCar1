@@ -9,22 +9,16 @@ import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-//import rentacar.bo.UserBO;
-//import rentacar.dao.UsuAdmDAO;
-//import rentacar.dao.Utilidades;
-//import rentacar.entities.MiError;
-//import rentacar.entities.UsuAdm;
+import bo.UserBO;
+import dao.UsuAdmDAO;
+import dao.Utilidades;
+import entities.MiError;
+import entities.UsuAdm;
 
 /**
  *
@@ -206,39 +200,39 @@ public class FrmUser extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-//        //UsuAdm u = new UsuAdm();
-//        try {
-//            u.setCedula(Integer.parseInt(txtCedula.getText()));
-//            u.setTelefono(Integer.parseInt(txtTelefono.getText()));
-//            u.setNombre(txtNombre.getText());
-//            u.setDireccion(txtDireccion.getText());
-//            u.setFoto(img2);
-//            Utilidades uti = new Utilidades();
-//            String contra = uti.Encriptar(txtContra.getText());
-//            u.setContraseña(contra);
-//            UserBO uBo = new UserBO();
-//
-//            if (uBo.registrarUser(u)) {
-//                lblError.setText("Usuario Registrado con Éxito.");
-//
-//            } else {
-//                lblError.setText("Intente nuevamente.");
-//            }
-//        } catch (NumberFormatException ex) {
-//            lblError.setText("La cedula o el telefono tienen un formato incorrecto");
-//        } catch (MiError ex) {
-//            lblError.setText(ex.getMessage());
-//        }
+        UsuAdm u = new UsuAdm();
+        try {
+            u.setCedula(Integer.parseInt(txtCedula.getText()));
+            u.setTelefono(Integer.parseInt(txtTelefono.getText()));
+            u.setNombre(txtNombre.getText());
+            u.setDireccion(txtDireccion.getText());
+            u.setFoto(img2);
+            Utilidades uti = new Utilidades();
+            String contra = uti.Encriptar(txtContra.getText());
+            u.setContraseña(contra);
+            UserBO uBo = new UserBO();
+
+            if (uBo.registrarUser(u)) {
+                lblError.setText("Usuario Registrado con Éxito.");
+
+            } else {
+                lblError.setText("Intente nuevamente.");
+            }
+        } catch (NumberFormatException ex) {
+            lblError.setText("La cedula o el telefono tienen un formato incorrecto");
+        } catch (MiError ex) {
+            lblError.setText(ex.getMessage());
+        }
 
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-////        Login login = new Login();
-////        login.setVisible(true);
-////        login.setLocationRelativeTo(null);
-////        dispose();
+        Login login = new Login();
+        login.setVisible(true);
+        login.setLocationRelativeTo(null);
+        dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
@@ -262,19 +256,21 @@ public class FrmUser extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-//        UsuAdm a = new UsuAdm();
-//        try {
-//            a.setCedula(Integer.parseInt(txtCedula.getText()));
-//            UsuAdmDAO u = new UsuAdmDAO();
-//            if (u.eliminar(a)) {
-//                lblError.setText("El usuario ha sido eliminado correctamente");
-//            }else{
-//                lblError.setText("No se puede eliminar el administrador");
-//                txtCedula.setText("");
-//            }
-//        } catch (NumberFormatException e) {
-//            lblError.setText("Debe digitar solo numeros");
-//        }
+        UsuAdm a = new UsuAdm();
+        try {
+            a.setCedula(Integer.parseInt(txtCedula.getText()));
+            UsuAdmDAO u = new UsuAdmDAO();
+            if (u.eliminar(a)) {
+                lblError.setText("El usuario ha sido eliminado correctamente");
+            }else{
+                lblError.setText("No se puede eliminar el administrador");
+                txtCedula.setText("");
+            }
+        } catch (NumberFormatException e) {
+            lblError.setText("Debe digitar solo numeros");
+        }catch(MiError m){
+          lblError.setText(m.getMessage());  
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

@@ -40,11 +40,13 @@ public class UsuAdmDAO {
             stmt.setString(4, u.getDireccion());
             stmt.setString(5, u.getContraseña());
             stmt.setBoolean(6, u.isTipo());
-            stmt.setBinaryStream(7, fis);           
+            stmt.setBinaryStream(7, fis);
             return stmt.executeUpdate() > 0;
 
-        } catch (Exception ex) {
+        } catch (SQLException s) {
             throw new MiError("El usuario ya existe");
+        } catch (Exception ex) {
+            throw new MiError("Problemas al cargar usuarios");
         }
 
     }
@@ -101,15 +103,14 @@ public class UsuAdmDAO {
 
     public boolean eliminar(UsuAdm a) {
         try (Connection con = Conexion.conexion()) {
-            String sql = "delete from users where cedula = ?";
-            if (a.getCedula() != 101) {
-                PreparedStatement stmt = con.prepareStatement(sql);
-                stmt.setInt(1, a.getCedula());
-                return stmt.executeUpdate() > 0;
-            }
+            String sql = "delete from users where cedula = ? AND tipo = false";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, a.getCedula());
+            return stmt.executeUpdate() > 0;
+
         } catch (Exception ex) {
             throw new MiError("No se pudo eliminar el usuario, favor intente nuevamente");
         }
-        return false;
+       
     }
 }
