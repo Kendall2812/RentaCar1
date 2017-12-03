@@ -49,7 +49,7 @@ public class UsuAdmDAO {
 
     }
 
-    public LinkedList<UsuAdm> cargarTodo() {
+    public LinkedList<UsuAdm> cargarTodo1() {
         LinkedList<UsuAdm> usuarios = new LinkedList<>();
         try (Connection con = Conexion.conexion()) {
             String sql = "select * from users";

@@ -11,8 +11,8 @@ package entities;
  */
 public class Modelo extends Componente {
 
-    public Modelo(int id, String nombre) {
-        super(id, nombre);
+    public Modelo(int id, String nombre, String nombremodificado) {
+        super(id, nombre, nombremodificado);
     }
     public Modelo() {
         

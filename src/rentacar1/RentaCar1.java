@@ -8,6 +8,7 @@ package rentacar1;
  *
  * @author Kendall
  */
+import gui.Administration_Window;
 import gui.Login;
 public class RentaCar1 {
 
@@ -15,8 +16,10 @@ public class RentaCar1 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Login vetn = new Login();
-        vetn.setVisible(true);
+        Administration_Window windows = new Administration_Window();
+        windows.setVisible(true);
+//        Login vetn = new Login();
+//        vetn.setVisible(true);
     }
     
 }

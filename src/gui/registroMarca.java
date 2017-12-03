@@ -7,7 +7,9 @@ package gui;
 
 import javax.swing.JOptionPane;
 import bo.MarcaBO;
+import dao.MarcaDAO;
 import entities.Marca;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,10 +20,37 @@ public class registroMarca extends javax.swing.JFrame {
     /**
      * Creates new form registroMarca
      */
-    public registroMarca() {
+    String tipoAccion = "";
+    String marcaEditada = "";
+    String seleccionado = "";
+    String marcaEliminada = "";
+    ArrayList marcas = new ArrayList();
+    public registroMarca(String tipoaccion) {
         initComponents();
-        this.setTitle("Registro de la Marca");
+        tipoAccion = tipoaccion;
+        this.setTitle("Informacion de la Marca");
         this.setLocationRelativeTo(null);
+        realizarAccion();
+    }
+    public void realizarAccion(){
+        System.out.println(tipoAccion);
+        if (tipoAccion.equals("registrar")) {
+            txtNombreMarca.setEnabled(true);
+            btnRegistrarMarca.setEnabled(true);
+            
+        } else if (tipoAccion.equals("editar")) {
+            txtMarcaEditada.setEnabled(true);
+            btnGuardar.setEnabled(true);
+            btnRefrescaLista.setEnabled(true);
+            jCB1Marcas.setEnabled(true);
+            cargarMarcas();
+            
+        } else if (tipoAccion.equals("eliminar")) {
+            jCB1EliminarMarca.setEnabled(true);
+            btnRefrecasListaEliminada.setEnabled(true);
+            btnEliminar.setEnabled(true);
+            cargarMarcas();
+        }
     }
     public void registroMarca(){
         Marca marc = new Marca();
@@ -34,8 +63,53 @@ public class registroMarca extends javax.swing.JFrame {
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio esta vacio. " + e);
         }
+    }
+    public void cargarMarcas(){
+        MarcaDAO marca = new MarcaDAO();
+        if(tipoAccion.equals("editar")){
+            marcas = marca.cargarMarcas();
+            jCB1Marcas.addItem("Selecionar");
+            for (int x = 0; x < marcas.size(); x++) {
+                jCB1Marcas.addItem(marcas.get(x).toString());
+            }
+        }
+        if(tipoAccion.equals("eliminar")){
+            marcas = marca.cargarMarcas();
+            jCB1EliminarMarca.addItem("Selecionar");
+            for (int x = 0; x < marcas.size(); x++) {
+                jCB1EliminarMarca.addItem(marcas.get(x).toString());
+            }
+        }
+    }
+    public void editarMarca(){
+        marcaEditada = txtMarcaEditada.getText();
+        Marca es = new Marca();
+        try {
+            es.setNombremodificado(seleccionado);
+            es.setNombre(marcaEditada);
+            MarcaBO mo = new MarcaBO();
+            if (mo.editarMarca(es)) {
+                JOptionPane.showMessageDialog(null, "Se modifico con exito.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
+        }
+    }
+    public void eliminarMarca(){
+        marcaEliminada = jCB1EliminarMarca.getSelectedItem().toString();
         
-    } 
+        Marca es = new Marca();
+        try{
+            es.setNombre(marcaEliminada);
+            MarcaBO mo = new MarcaBO();
+            if(mo.EliminarMarca(es)){
+                JOptionPane.showMessageDialog(null, "Se elimino con exito.");
+            }
+            
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,23 +120,218 @@ public class registroMarca extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtNombreMarca = new javax.swing.JTextField();
         btnRegistrarMarca = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jCB1Marcas = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        txtMarcaEditada = new javax.swing.JTextField();
+        btnGuardar = new javax.swing.JButton();
+        btnRefrescaLista = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jCB1EliminarMarca = new javax.swing.JComboBox<>();
+        btnEliminar = new javax.swing.JButton();
+        btnRefrecasListaEliminada = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText("Nombre de la Marca");
 
         txtNombreMarca.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreMarca.setEnabled(false);
 
+        btnRegistrarMarca.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnRegistrarMarca.setText("Registrar");
+        btnRegistrarMarca.setEnabled(false);
         btnRegistrarMarca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistrarMarcaActionPerformed(evt);
             }
         });
+
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel2.setText("Registro de Marcas");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(txtNombreMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistrarMarca)
+                    .addComponent(jLabel2))
+                .addContainerGap(139, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(34, 34, 34)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(txtNombreMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnRegistrarMarca)
+                .addContainerGap(124, Short.MAX_VALUE))
+        );
+
+        btnRegresar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
+        jSeparator1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel3.setText("Editar Marcas");
+
+        jCB1Marcas.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jCB1Marcas.setEnabled(false);
+        jCB1Marcas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCB1MarcasActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setText("Edite");
+
+        txtMarcaEditada.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtMarcaEditada.setEnabled(false);
+
+        btnGuardar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        btnRefrescaLista.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnRefrescaLista.setText("Refrescar Lista");
+        btnRefrescaLista.setEnabled(false);
+        btnRefrescaLista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrescaListaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCB1Marcas, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(47, 47, 47)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnRefrescaLista)
+                    .addComponent(btnGuardar)
+                    .addComponent(txtMarcaEditada, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCB1Marcas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMarcaEditada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGuardar)
+                .addGap(18, 18, 18)
+                .addComponent(btnRefrescaLista)
+                .addGap(18, 18, 18))
+        );
+
+        jSeparator2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel5.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel5.setText("Eliminar Marcas");
+
+        jCB1EliminarMarca.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jCB1EliminarMarca.setEnabled(false);
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setEnabled(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnRefrecasListaEliminada.setText("Refrescar Lista");
+        btnRefrecasListaEliminada.setEnabled(false);
+        btnRefrecasListaEliminada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrecasListaEliminadaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jCB1EliminarMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnRefrecasListaEliminada)
+                            .addComponent(btnEliminar))
+                        .addGap(17, 17, 17))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCB1EliminarMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar))
+                .addGap(18, 18, 18)
+                .addComponent(btnRefrecasListaEliminada)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -71,21 +340,33 @@ public class registroMarca extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(txtNombreMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegistrarMarca))
-                .addContainerGap(261, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(btnRegresar)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNombreMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSeparator1)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator2)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(btnRegistrarMarca)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addComponent(btnRegresar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -94,6 +375,41 @@ public class registroMarca extends javax.swing.JFrame {
     private void btnRegistrarMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarMarcaActionPerformed
         registroMarca();
     }//GEN-LAST:event_btnRegistrarMarcaActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        Administration_Window regresar = new Administration_Window();
+        regresar.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void jCB1MarcasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCB1MarcasActionPerformed
+        txtMarcaEditada.setText("");
+        if (jCB1Marcas != null) {
+            if (jCB1Marcas.getSelectedItem() != null) {
+                seleccionado = jCB1Marcas.getSelectedItem().toString();
+                txtMarcaEditada.setText(seleccionado);
+            }
+        }
+    }//GEN-LAST:event_jCB1MarcasActionPerformed
+
+    private void btnRefrescaListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescaListaActionPerformed
+        jCB1Marcas.removeAllItems();
+        txtMarcaEditada.setText("");
+        cargarMarcas();
+    }//GEN-LAST:event_btnRefrescaListaActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        editarMarca();
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        eliminarMarca();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnRefrecasListaEliminadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrecasListaEliminadaActionPerformed
+        jCB1EliminarMarca.removeAllItems();
+        cargarMarcas();
+    }//GEN-LAST:event_btnRefrecasListaEliminadaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,14 +442,31 @@ public class registroMarca extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new registroMarca().setVisible(true);
+                new registroMarca("").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnRefrecasListaEliminada;
+    private javax.swing.JButton btnRefrescaLista;
     private javax.swing.JButton btnRegistrarMarca;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JComboBox<String> jCB1EliminarMarca;
+    private javax.swing.JComboBox<String> jCB1Marcas;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextField txtMarcaEditada;
     private javax.swing.JTextField txtNombreMarca;
     // End of variables declaration//GEN-END:variables
 }

@@ -22,4 +22,21 @@ public class OficinaBO {
         OficinaDAO ofidao = new OficinaDAO();
         return ofidao.registroOficina(ofi);
     }
+    public boolean editarOficina(Oficina ofi) throws SQLException {
+        if (ofi.getNombre().isEmpty()) {
+            throw new MiError("");
+        }
+        if (ofi.getNombremodificado().isEmpty()) {
+            throw new MiError("");
+        }
+        OficinaDAO ofidao = new OficinaDAO();
+        return ofidao.modificarOficina(ofi);
+    }
+    public boolean EliminarOficina(Oficina ofi) throws SQLException {
+        if (ofi.getNombre().isEmpty()) {
+            throw new MiError("");
+        }
+        OficinaDAO ofidao = new OficinaDAO();
+        return ofidao.eliminarOficina(ofi);
+    } 
 }

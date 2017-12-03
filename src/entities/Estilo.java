@@ -11,8 +11,8 @@ package entities;
  */
 public class Estilo extends Componente {
 
-    public Estilo(int id, String nombre) {
-        super(id, nombre);
+    public Estilo(int id, String nombre, String nombremodificado) {
+        super(id, nombre, nombremodificado);
     }
     public Estilo() {
         

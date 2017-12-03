@@ -11,8 +11,8 @@ package entities;
  */
 public class Marca extends Componente {
 
-    public Marca(int id, String nombre) {
-        super(id, nombre);
+    public Marca(int id, String nombre, String nombremodificado) {
+        super(id, nombre, nombremodificado);
     }
     public Marca(){
         
