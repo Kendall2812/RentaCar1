@@ -35,7 +35,7 @@ public class ModeloDAO {
     public ArrayList cargarModelo() {
         ArrayList modelo = new ArrayList();
         try (Connection con = Conexion.conexion()) {
-            String sql = "select nombre_modelo from modelo";
+            String sql = "select nombre_modelo from modelo order by nombre_modelo";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

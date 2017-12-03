@@ -33,7 +33,7 @@ public class OficinaDAO {
     public ArrayList cargarOficina() {
         ArrayList oficina = new ArrayList();
         try (Connection con = Conexion.conexion()) {
-            String sql = "select nombre_oficina from oficina";
+            String sql = "select nombre_oficina from oficina order by nombre_oficina";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

@@ -34,7 +34,7 @@ public class EstilosDAO {
     public ArrayList cargarEstilos() {
         ArrayList estilos = new ArrayList();
         try (Connection con = Conexion.conexion()) {
-            String sql = "select nombre_estilo from estilo";
+            String sql = "select nombre_estilo from estilo order by nombre_estilo";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {

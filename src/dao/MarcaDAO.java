@@ -34,7 +34,7 @@ public class MarcaDAO {
     public ArrayList cargarMarcas() {
         ArrayList marcas = new ArrayList();
         try (Connection con = Conexion.conexion()) {
-            String sql = "select nombre_marca from marca";
+            String sql = "select nombre_marca from marca order by nombre_marca";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
