@@ -6,6 +6,8 @@
 package dao;
 
 import entities.MiError;
+import entities.Modelo;
+import entities.UsuAdm;
 import entities.Vehiculo;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
