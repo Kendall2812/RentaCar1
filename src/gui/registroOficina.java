@@ -7,7 +7,9 @@ package gui;
 
 import javax.swing.JOptionPane;
 import bo.OficinaBO;
+import dao.OficinaDAO;
 import entities.Oficina;
+import java.util.ArrayList;
 
 /**
  *
@@ -18,10 +20,54 @@ public class registroOficina extends javax.swing.JFrame {
     /**
      * Creates new form registroOficina
      */
-    public registroOficina() {
+    String tipoAccion = "";
+    String seleccionado = "";
+    String oficinaEditada = "";
+    String modeloEliminado = "";
+    ArrayList oficinas = new ArrayList();
+    public registroOficina(String tipoaccion) {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setTitle("Registro de Oficinas.");
+        tipoAccion = tipoaccion;
+        this.setTitle("Informacion de las Oficinas.");
+        realizarAccion();
+    }
+    public void realizarAccion(){
+        System.out.println(tipoAccion);
+        if (tipoAccion.equals("registrar")) {
+            txtNombreOficina.setEnabled(true);
+            btnRegistrarOficina.setEnabled(true);
+            
+        } else if (tipoAccion.equals("editar")) {
+            txtOficinaEditada.setEnabled(true);
+            btnGuardarOficinaEditada.setEnabled(true);
+            btnRefrescarListaEditada.setEnabled(true);
+            jCB1Editaroficina.setEnabled(true);
+            cargarOficinas();
+            
+        } else if (tipoAccion.equals("eliminar")) {
+            jCB1EliminarOficinas.setEnabled(true);
+            btnRefrescarListaEliminada.setEnabled(true);
+            btnEliminar.setEnabled(true);
+            cargarOficinas();
+        }
+    }
+    public void cargarOficinas(){
+        OficinaDAO oficina = new OficinaDAO();
+        if(tipoAccion.equals("editar")){
+            oficinas = oficina.cargarOficina();
+            jCB1Editaroficina.addItem("Selecionar");
+            for (int x = 0; x < oficinas.size(); x++) {
+                jCB1Editaroficina.addItem(oficinas.get(x).toString());
+            }
+        }
+        if(tipoAccion.equals("eliminar")){
+            oficinas = oficina.cargarOficina();
+            jCB1EliminarOficinas.addItem("Selecionar");
+            for (int x = 0; x < oficinas.size(); x++) {
+                jCB1EliminarOficinas.addItem(oficinas.get(x).toString());
+            }
+        }
     }
     public void registroOficina(){
         Oficina ofic = new Oficina();
@@ -35,6 +81,35 @@ public class registroOficina extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio esta vacio. " + e);
         }
     }
+    public void editarOficina(){
+        oficinaEditada = txtOficinaEditada.getText();
+        Oficina ofi = new Oficina();
+        try {
+            ofi.setNombremodificado(seleccionado);
+            ofi.setNombre(oficinaEditada);
+            OficinaBO mo = new OficinaBO();
+            if (mo.editarOficina(ofi)) {
+                JOptionPane.showMessageDialog(null, "Se modifico con exito.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
+        }
+    }
+    public void eliminarOficina(){
+        modeloEliminado = jCB1EliminarOficinas.getSelectedItem().toString();
+        
+        Oficina ofi = new Oficina();
+        try{
+            ofi.setNombre(modeloEliminado);
+            OficinaBO mo = new OficinaBO();
+            if(mo.EliminarOficina(ofi)){
+                JOptionPane.showMessageDialog(null, "Se elimino con exito.");
+            }
+            
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -45,54 +120,301 @@ public class registroOficina extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         txtNombreOficina = new javax.swing.JTextField();
-        btnOficina = new javax.swing.JButton();
+        btnRegistrarOficina = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jCB1Editaroficina = new javax.swing.JComboBox<>();
+        txtOficinaEditada = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        btnGuardarOficinaEditada = new javax.swing.JButton();
+        btnRefrescarListaEditada = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jCB1EliminarOficinas = new javax.swing.JComboBox<>();
+        btnEliminar = new javax.swing.JButton();
+        btnRefrescarListaEliminada = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText("Nombre Oficina");
 
-        txtNombreOficina.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel2.setText("Registro de Oficinas");
 
-        btnOficina.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnOficina.setText("Registrar");
-        btnOficina.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreOficina.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreOficina.setEnabled(false);
+
+        btnRegistrarOficina.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnRegistrarOficina.setText("Registrar");
+        btnRegistrarOficina.setEnabled(false);
+        btnRegistrarOficina.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOficinaActionPerformed(evt);
+                btnRegistrarOficinaActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(txtNombreOficina, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistrarOficina))
+                .addContainerGap(180, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(txtNombreOficina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnRegistrarOficina)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSeparator1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel3.setText("Editar Oficinas");
+
+        jCB1Editaroficina.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jCB1Editaroficina.setEnabled(false);
+        jCB1Editaroficina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCB1EditaroficinaActionPerformed(evt);
+            }
+        });
+
+        txtOficinaEditada.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtOficinaEditada.setEnabled(false);
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setText("Edite");
+
+        btnGuardarOficinaEditada.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnGuardarOficinaEditada.setText("Guardar");
+        btnGuardarOficinaEditada.setEnabled(false);
+        btnGuardarOficinaEditada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarOficinaEditadaActionPerformed(evt);
+            }
+        });
+
+        btnRefrescarListaEditada.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnRefrescarListaEditada.setText("Refrescar Lista");
+        btnRefrescarListaEditada.setEnabled(false);
+        btnRefrescarListaEditada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrescarListaEditadaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCB1Editaroficina, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(60, 60, 60)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnGuardarOficinaEditada)
+                            .addComponent(txtOficinaEditada, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnRefrescarListaEditada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCB1Editaroficina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtOficinaEditada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(101, 101, 101)))
+                .addComponent(btnGuardarOficinaEditada)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnRefrescarListaEditada)
+                .addGap(42, 42, 42))
+        );
+
+        btnRegresar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel5.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel5.setText("Eliminar Oficinas");
+
+        jCB1EliminarOficinas.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jCB1EliminarOficinas.setEnabled(false);
+
+        btnEliminar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setEnabled(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnRefrescarListaEliminada.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnRefrescarListaEliminada.setText("Refrescar Lista");
+        btnRefrescarListaEliminada.setEnabled(false);
+        btnRefrescarListaEliminada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrescarListaEliminadaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jCB1EliminarOficinas, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnRefrescarListaEliminada)
+                    .addComponent(btnEliminar))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCB1EliminarOficinas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRefrescarListaEliminada)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSeparator2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(btnOficina)
-                    .addComponent(txtNombreOficina, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(288, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNombreOficina, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSeparator1)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSeparator2))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(btnOficina)
-                .addContainerGap(198, Short.MAX_VALUE))
+                .addComponent(btnRegresar)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnOficinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOficinaActionPerformed
+    private void btnRegistrarOficinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarOficinaActionPerformed
         registroOficina();
-    }//GEN-LAST:event_btnOficinaActionPerformed
+    }//GEN-LAST:event_btnRegistrarOficinaActionPerformed
+
+    private void btnGuardarOficinaEditadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarOficinaEditadaActionPerformed
+        editarOficina();
+    }//GEN-LAST:event_btnGuardarOficinaEditadaActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        eliminarOficina();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        Administration_Window regresar = new Administration_Window();
+        regresar.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnRefrescarListaEditadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarListaEditadaActionPerformed
+        jCB1Editaroficina.removeAllItems();
+        txtOficinaEditada.setText("");
+        cargarOficinas();
+    }//GEN-LAST:event_btnRefrescarListaEditadaActionPerformed
+
+    private void btnRefrescarListaEliminadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarListaEliminadaActionPerformed
+        jCB1EliminarOficinas.removeAllItems();
+        cargarOficinas();
+    }//GEN-LAST:event_btnRefrescarListaEliminadaActionPerformed
+
+    private void jCB1EditaroficinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCB1EditaroficinaActionPerformed
+        txtOficinaEditada.setText("");
+        if (jCB1Editaroficina != null) {
+            if (jCB1Editaroficina.getSelectedItem() != null) {
+                seleccionado = jCB1Editaroficina.getSelectedItem().toString();
+                txtOficinaEditada.setText(seleccionado);
+            }
+        }
+    }//GEN-LAST:event_jCB1EditaroficinaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -125,14 +447,31 @@ public class registroOficina extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new registroOficina().setVisible(true);
+                new registroOficina("").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnOficina;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnGuardarOficinaEditada;
+    private javax.swing.JButton btnRefrescarListaEditada;
+    private javax.swing.JButton btnRefrescarListaEliminada;
+    private javax.swing.JButton btnRegistrarOficina;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JComboBox<String> jCB1Editaroficina;
+    private javax.swing.JComboBox<String> jCB1EliminarOficinas;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField txtNombreOficina;
+    private javax.swing.JTextField txtOficinaEditada;
     // End of variables declaration//GEN-END:variables
 }

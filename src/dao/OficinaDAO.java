@@ -10,14 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import entities.MiError;
 import entities.Oficina;
-import entities.UsuAdm;
-import java.awt.Image;
 import java.io.IOException;
-import java.io.InputStream;
-import java.sql.ResultSet;
 import java.util.LinkedList;
-import javax.imageio.ImageIO;
-
+import java.sql.ResultSet;
+import java.util.ArrayList;
 /**
  *
  * @author Kendall
@@ -55,6 +51,44 @@ public class OficinaDAO {
         Oficina o = new Oficina();  
         o.setNombre(rs.getString("nombre_oficina"));
         return o;
+    }
+    public ArrayList cargarOficina() {
+        ArrayList oficina = new ArrayList();
+        try (Connection con = Conexion.conexion()) {
+            String sql = "select nombre_oficina from oficina order by nombre_oficina";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                oficina.add(rs.getString("nombre_oficina"));
+            }
+        } catch (Exception ex) {
+            throw new MiError("Error al extaer las modelo." + ex);
+        }
+        return oficina;
+    }
+    public boolean modificarOficina(Oficina ofi) throws SQLException{
+        String nombre = ofi.getNombre();
+        String modificado = ofi.getNombremodificado();
+        try(Connection con = Conexion.conexion()){
+            String sql = "UPDATE oficina SET nombre_oficina = ? where nombre_oficina = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, nombre);
+            stmt.setString(2, modificado);
+            return stmt.executeUpdate() > 0;
+            
+        }catch(Exception ex){
+            throw new MiError("Falla al momento de modificar oficina.");
+        }
+    }
+    public boolean eliminarOficina(Oficina ofi) throws SQLException {
+        try (Connection con = Conexion.conexion()) {
+            String sql = "DELETE FROM oficina WHERE nombre_oficina = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, ofi.getNombre());
 
+            return stmt.executeUpdate() > 0;
+        } catch (Exception ex) {
+            throw new MiError("Falla al eliminar el modelo.");
+        }
     }
 }

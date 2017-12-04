@@ -19,6 +19,7 @@ import dao.UsuAdmDAO;
 import dao.Utilidades;
 import entities.MiError;
 import entities.UsuAdm;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -65,7 +66,6 @@ public class FrmUser extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         lblError = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -78,6 +78,18 @@ public class FrmUser extends javax.swing.JFrame {
         });
 
         jLabel1.setText("NOMBRE:");
+
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyTyped(evt);
+            }
+        });
+
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
+        });
 
         jLabel2.setText("CEDULA:");
 
@@ -98,13 +110,6 @@ public class FrmUser extends javax.swing.JFrame {
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
-            }
-        });
-
-        jButton1.setText("Eliminar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
             }
         });
 
@@ -135,9 +140,7 @@ public class FrmUser extends javax.swing.JFrame {
                         .addGap(48, 48, 48)
                         .addComponent(jButton4)
                         .addGap(67, 67, 67)
-                        .addComponent(jButton2)
-                        .addGap(52, 52, 52)
-                        .addComponent(jButton1))
+                        .addComponent(jButton2))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(106, 106, 106)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,7 +156,7 @@ public class FrmUser extends javax.swing.JFrame {
                             .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 75, Short.MAX_VALUE))
+                .addGap(0, 110, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,7 +193,6 @@ public class FrmUser extends javax.swing.JFrame {
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton1)
                     .addComponent(jButton4))
                 .addContainerGap(59, Short.MAX_VALUE))
         );
@@ -254,36 +256,38 @@ public class FrmUser extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnFotoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        UsuAdm a = new UsuAdm();
-        try {
-            a.setCedula(Integer.parseInt(txtCedula.getText()));
-            UsuAdmDAO u = new UsuAdmDAO();
-            if (u.eliminar(a)) {
-                lblError.setText("El usuario ha sido eliminado correctamente");
-            }else{
-                lblError.setText("No se puede eliminar el administrador");
-                txtCedula.setText("");
-            }
-        } catch (NumberFormatException e) {
-            lblError.setText("Debe digitar solo numeros");
-        }catch(MiError m){
-          lblError.setText(m.getMessage());  
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         //mostrar imagen dependiendo el usuario que deseemos
-//        UsuAdmDAO dao = new UsuAdmDAO();
-//       LinkedList<UsuAdm> usuarios = dao.cargarTodo(0);
-//        for (UsuAdm usuario : usuarios) {
-//            if (usuario.getCedula()== 207500700){
-//                btnFoto.setIcon(new ImageIcon (usuario.getFoto().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_DEFAULT)));
-//            }
-//        }
+        //        UsuAdmDAO dao = new UsuAdmDAO();
+        //       LinkedList<UsuAdm> usuarios = dao.cargarTodo1(0);
+        //        for (UsuAdm usuario : usuarios) {
+            //            if (usuario.getCedula()== 207500700){
+                //                btnFoto.setIcon(new ImageIcon (usuario.getFoto().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_DEFAULT)));
+                //            }
+            //        }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
+        // TODO add your handling code here:
+        char numero = evt.getKeyChar();
+        if (Character.isLetter(numero)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Ingrese solo Números");
+        }
+    }//GEN-LAST:event_txtCedulaKeyTyped
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        // TODO add your handling code here:
+        char numero = evt.getKeyChar();
+
+        if (Character.isLetter(numero)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Ingrese solo Números");
+        }
+    }//GEN-LAST:event_txtTelefonoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -332,7 +336,6 @@ public class FrmUser extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFoto;
     private javax.swing.JFileChooser fcFoto;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

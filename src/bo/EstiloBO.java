@@ -23,4 +23,21 @@ public class EstiloBO {
         EstilosDAO esdao = new EstilosDAO();
         return esdao.insertarEstilo(es);
     }
+    public boolean EditarEstilo(Estilo es) throws SQLException {
+        if (es.getNombre().isEmpty()) {
+            throw new MiError("");
+        }
+        if(es.getNombremodificado().isEmpty()){
+            throw new MiError("");
+        }
+        EstilosDAO esdao = new EstilosDAO();
+        return esdao.modificarEstilo(es);
+    }
+    public boolean EliminarEstilo(Estilo eli) throws SQLException {
+        if (eli.getNombre().isEmpty()) {
+            throw new MiError("");
+        }
+        EstilosDAO esdao = new EstilosDAO();
+        return esdao.eliminarEstilo(eli);
+    }
 }

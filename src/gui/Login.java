@@ -146,7 +146,9 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "El usuario no esta registrado");
             } else {
                 if (a.isTipo()) {
-                    System.out.println("si es administrador");
+                    Administration_Window ventana = new Administration_Window();
+                    ventana.setVisible(true);
+                    dispose();
                 }else{
                     RentaVehiculo ren= new RentaVehiculo();
                     ren.setVisible(true);

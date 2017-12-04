@@ -7,7 +7,6 @@ package bo;
 
 import java.sql.SQLException;
 import dao.ModeloDAO;
-import dao.UsuAdmDAO;
 import entities.MiError;
 import entities.Modelo;
 
@@ -25,5 +24,21 @@ public class ModeloBO {
         ModeloDAO idao = new ModeloDAO();
         return idao.insertarModelo(r);
     }
-
+    public boolean editarModelo(Modelo mod) throws SQLException {
+        if (mod.getNombre().isEmpty()) {
+            throw new MiError("");
+        }
+        if (mod.getNombremodificado().isEmpty()) {
+            throw new MiError("");
+        }
+        ModeloDAO moddao = new ModeloDAO();
+        return moddao.modificarMarca(mod);
+    }
+    public boolean EliminarMarca(Modelo eli) throws SQLException {
+        if (eli.getNombre().isEmpty()) {
+            throw new MiError("");
+        }
+        ModeloDAO moddao = new ModeloDAO();
+        return moddao.eliminarModelo(eli);
+    } 
 }

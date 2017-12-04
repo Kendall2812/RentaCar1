@@ -11,8 +11,8 @@ package entities;
  */
 public class Oficina extends Componente {
 
-    public Oficina(int id, String nombre) {
-        super(id, nombre);
+    public Oficina(int id, String nombre, String nombremodificado) {
+        super(id, nombre, nombremodificado);
     }
     public Oficina(){
         

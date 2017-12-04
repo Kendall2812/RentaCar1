@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import entities.Marca;
 import entities.MiError;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  *
@@ -26,6 +28,45 @@ public class MarcaDAO {
 
         } catch (Exception ex) {
             throw new MiError("La marca ya se encuentra registrada.");
+        }
+    }
+    public ArrayList cargarMarcas() {
+        ArrayList marcas = new ArrayList();
+        try (Connection con = Conexion.conexion()) {
+            String sql = "select nombre_marca from marca order by nombre_marca";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                marcas.add(rs.getString("nombre_marca"));
+            }
+        } catch (Exception ex) {
+            throw new MiError("Error al extaer las marcas." + ex);
+        }
+        return marcas;
+    }
+    public boolean modificarMarca(Marca mod) throws SQLException{
+        String nombre = mod.getNombre();
+        String modificado = mod.getNombremodificado();
+        try(Connection con = Conexion.conexion()){
+            String sql = "UPDATE marca SET nombre_marca = ? where nombre_marca = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, nombre);
+            stmt.setString(2, modificado);
+            return stmt.executeUpdate() > 0;
+            
+        }catch(Exception ex){
+            throw new MiError("Falla al momento de modificar estilo.");
+        }
+    }
+    public boolean eliminarMarca(Marca eli) throws SQLException {
+        try (Connection con = Conexion.conexion()) {
+            String sql = "DELETE FROM marca WHERE nombre_marca = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, eli.getNombre());
+
+            return stmt.executeUpdate() > 0;
+        } catch (Exception ex) {
+            throw new MiError("Falla al eliminar el estilo.");
         }
     }
 }

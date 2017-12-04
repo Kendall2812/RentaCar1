@@ -13,10 +13,12 @@ public class Componente {
 
     private int id;
     private String nombre;
+    private String nombremodificado;
 
-    public Componente(int id, String nombre) {
+    public Componente(int id, String nombre, String nombremodificado) {
         this.id = id;
         this.nombre = nombre;
+        this.nombremodificado = nombremodificado;
     }
 
     public Componente() {
@@ -36,5 +38,13 @@ public class Componente {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getNombremodificado() {
+        return nombremodificado;
+    }
+
+    public void setNombremodificado(String nombremodificado) {
+        this.nombremodificado = nombremodificado;
     }
 }

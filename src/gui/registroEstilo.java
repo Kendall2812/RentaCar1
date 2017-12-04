@@ -5,9 +5,11 @@
  */
 package gui;
 
-import javax.swing.JOptionPane;
 import bo.EstiloBO;
+import dao.EstilosDAO;
 import entities.Estilo;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,21 +20,96 @@ public class registroEstilo extends javax.swing.JFrame {
     /**
      * Creates new form registroEstilo
      */
-    public registroEstilo() {
+    String tipoAccion = "";
+    String estiloEditado = "";
+    String selecionado = "";
+    String estiloEliminar = "";
+    ArrayList estilo = new ArrayList();
+    public registroEstilo(String tipoaccion) {
         initComponents();
+        tipoAccion = tipoaccion;
         this.setLocationRelativeTo(null);
-        this.setTitle("Registro del Estilo Vehiculo.");
+        this.setTitle("Informacion del Estilo Vehiculo.");
+        reliazarAccionEstilo();
     }
-    public void registroEstilo(){
+    public void reliazarAccionEstilo() {
+        System.out.println(tipoAccion);
+
+        if (tipoAccion.equals("registrar")) {
+            btnRegistro.setEnabled(true);
+            txtNombreEstilo.setEditable(true);
+            
+        } else if (tipoAccion.equals("editar")) {
+            txtEdiatarEstilo.setEnabled(true);
+            btnGuarda.setEnabled(true);
+            btnRefrescarLista.setEnabled(true);
+            jCB1Estilos.setEnabled(true);
+            editarEstilo();
+            
+        } else if (tipoAccion.equals("eliminar")) {
+            jCB1EliminarEstilo.setEnabled(true);
+            btnRefrecarListaEliminados.setEnabled(true);
+            btnEliminar.setEnabled(true);
+            editarEstilo();
+        }
+    }
+    public void registrarEstilo() {
         Estilo es = new Estilo();
-        try{
+        try {
             es.setNombre(txtNombreEstilo.getText());
             EstiloBO mo = new EstiloBO();
-            if(mo.verificarEstilo(es)){
+            if (mo.verificarEstilo(es)) {
                 JOptionPane.showMessageDialog(null, "Se registro con exito.");
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio esta vacio. " + e);
+        }
+    }
+    public void editarEstilo(){
+        
+        EstilosDAO esti = new EstilosDAO();
+        if(tipoAccion.equals("editar")){
+            estilo = esti.cargarEstilos();
+            jCB1Estilos.addItem("Selecionar");
+            for (int x = 0; x < estilo.size(); x++) {
+                jCB1Estilos.addItem(estilo.get(x).toString());
+            }
+        }
+        if(tipoAccion.equals("eliminar")){
+            estilo = esti.cargarEstilos();
+            jCB1EliminarEstilo.addItem("Selecionar");
+            for (int x = 0; x < estilo.size(); x++) {
+                jCB1EliminarEstilo.addItem(estilo.get(x).toString());
+            }
+        }
+    }
+    public void guardarEstiloEditado1() {
+        estiloEditado = txtEdiatarEstilo.getText();
+        Estilo es = new Estilo();
+        try {
+            es.setNombremodificado(selecionado);
+            es.setNombre(estiloEditado);
+            EstiloBO mo = new EstiloBO();
+            if (mo.EditarEstilo(es)) {
+                JOptionPane.showMessageDialog(null, "Se modifico con exito.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
+        }
+    }
+    public void eliminarEstilo(){
+        estiloEliminar = jCB1EliminarEstilo.getSelectedItem().toString();
+        
+        Estilo es = new Estilo();
+        try{
+            es.setNombre(estiloEliminar);
+            EstiloBO eli = new EstiloBO();
+            if(eli.EliminarEstilo(es)){
+                JOptionPane.showMessageDialog(null, "Se elimino con exito.");
+            }
+            
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
         }
     }
 
@@ -45,21 +122,219 @@ public class registroEstilo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         txtNombreEstilo = new javax.swing.JTextField();
-        btnRegistrarEstilo = new javax.swing.JButton();
+        btnRegistro = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jCB1Estilos = new javax.swing.JComboBox<>();
+        btnGuarda = new javax.swing.JButton();
+        txtEdiatarEstilo = new javax.swing.JTextField();
+        btnRefrescarLista = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jCB1EliminarEstilo = new javax.swing.JComboBox<>();
+        btnEliminar = new javax.swing.JButton();
+        btnRefrecarListaEliminados = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setText("Nombre Estilo");
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel1.setText("Registro de Estilos");
+
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setText("Nombre Estilo");
+
+        txtNombreEstilo.setEditable(false);
+        txtNombreEstilo.setBackground(new java.awt.Color(255, 255, 255));
         txtNombreEstilo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
-        btnRegistrarEstilo.setText("Registrar");
-        btnRegistrarEstilo.addActionListener(new java.awt.event.ActionListener() {
+        btnRegistro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnRegistro.setText("Registrar");
+        btnRegistro.setEnabled(false);
+        btnRegistro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarEstiloActionPerformed(evt);
+                btnRegistroActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(txtNombreEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistro))
+                .addContainerGap(134, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(31, 31, 31)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtNombreEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnRegistro)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jSeparator1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel3.setText("Editar Estilos");
+
+        jCB1Estilos.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jCB1Estilos.setEnabled(false);
+        jCB1Estilos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCB1EstilosActionPerformed(evt);
+            }
+        });
+
+        btnGuarda.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnGuarda.setText("Guarda");
+        btnGuarda.setEnabled(false);
+        btnGuarda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardaActionPerformed(evt);
+            }
+        });
+
+        txtEdiatarEstilo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtEdiatarEstilo.setEnabled(false);
+
+        btnRefrescarLista.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnRefrescarLista.setText("Refrescar Lista");
+        btnRefrescarLista.setEnabled(false);
+        btnRefrescarLista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrescarListaActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel4.setText("Edite");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCB1Estilos, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(34, 34, 34)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGuarda, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRefrescarLista)
+                    .addComponent(txtEdiatarEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(4, 4, 4)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCB1Estilos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEdiatarEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addComponent(btnGuarda)
+                .addGap(18, 18, 18)
+                .addComponent(btnRefrescarLista)
+                .addGap(39, 39, 39))
+        );
+
+        jSeparator2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel5.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel5.setText("Eliminar Estilo");
+
+        jCB1EliminarEstilo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jCB1EliminarEstilo.setEnabled(false);
+
+        btnEliminar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setEnabled(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnRefrecarListaEliminados.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnRefrecarListaEliminados.setText("Refrescar Lista");
+        btnRefrecarListaEliminados.setEnabled(false);
+        btnRefrecarListaEliminados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrecarListaEliminadosActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jCB1EliminarEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnRefrecarListaEliminados)
+                            .addComponent(btnEliminar))
+                        .addGap(51, 51, 51))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCB1EliminarEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar))
+                .addGap(18, 18, 18)
+                .addComponent(btnRefrecarListaEliminados)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        btnRegresar.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
             }
         });
 
@@ -68,31 +343,79 @@ public class registroEstilo extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(txtNombreEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegistrarEstilo))
-                .addContainerGap(533, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnRegresar)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtNombreEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnRegistrarEstilo)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addComponent(btnRegresar)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnRegistrarEstiloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarEstiloActionPerformed
-        registroEstilo();
-    }//GEN-LAST:event_btnRegistrarEstiloActionPerformed
+    private void btnRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistroActionPerformed
+        registrarEstilo();
+    }//GEN-LAST:event_btnRegistroActionPerformed
+
+    private void jCB1EstilosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCB1EstilosActionPerformed
+        //jCB1Estilos
+        txtEdiatarEstilo.setText("");
+        if (jCB1Estilos != null) {
+            if (jCB1Estilos.getSelectedItem() != null) {
+                selecionado = jCB1Estilos.getSelectedItem().toString();
+                txtEdiatarEstilo.setText(selecionado);
+            }
+        }
+
+    }//GEN-LAST:event_jCB1EstilosActionPerformed
+
+    private void btnRefrescarListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarListaActionPerformed
+        jCB1Estilos.removeAllItems();
+        txtEdiatarEstilo.setText("");
+        editarEstilo();
+    }//GEN-LAST:event_btnRefrescarListaActionPerformed
+
+    private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
+        guardarEstiloEditado1();
+    }//GEN-LAST:event_btnGuardaActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        Administration_Window regresar = new Administration_Window();
+        regresar.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        eliminarEstilo();
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnRefrecarListaEliminadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrecarListaEliminadosActionPerformed
+        jCB1EliminarEstilo.removeAllItems();
+        editarEstilo();
+    }//GEN-LAST:event_btnRefrecarListaEliminadosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -120,19 +443,35 @@ public class registroEstilo extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(registroEstilo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new registroEstilo().setVisible(true);
+                new registroEstilo("").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnRegistrarEstilo;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnGuarda;
+    private javax.swing.JButton btnRefrecarListaEliminados;
+    private javax.swing.JButton btnRefrescarLista;
+    private javax.swing.JButton btnRegistro;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JComboBox<String> jCB1EliminarEstilo;
+    private javax.swing.JComboBox<String> jCB1Estilos;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextField txtEdiatarEstilo;
     private javax.swing.JTextField txtNombreEstilo;
     // End of variables declaration//GEN-END:variables
 }

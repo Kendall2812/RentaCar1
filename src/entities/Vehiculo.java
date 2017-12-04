@@ -18,12 +18,12 @@ public class Vehiculo {
     private String estilo;
     private String transmision;
     private String estado;
-    private int modelo;
+    private String modelo;
     private int año;
     private int precio;
     private Image foto;
 
-    public Vehiculo(String placa, String marca, String estilo, String transmision, String estado, int modelo, int año, int precio, Image foto) {
+    public Vehiculo(String placa, String marca, String estilo, String transmision, String estado, String modelo, int año, int precio, Image foto) {
         this.placa = placa;
         this.marca = marca;
         this.estilo = estilo;
@@ -33,6 +33,10 @@ public class Vehiculo {
         this.año = año;
         this.precio = precio;
         this.foto = foto;
+    }
+
+    public Vehiculo() {
+
     }
 
     public String getPlaca() {
@@ -75,11 +79,11 @@ public class Vehiculo {
         this.estado = estado;
     }
 
-    public int getModelo() {
+    public String getModelo() {
         return modelo;
     }
 
-    public void setModelo(int modelo) {
+    public void setModelo(String modelo) {
         this.modelo = modelo;
     }
 
