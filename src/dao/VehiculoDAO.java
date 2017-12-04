@@ -43,9 +43,9 @@ public class VehiculoDAO {
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException s) {
-            throw new MiError("El usuario ya existe");
+            throw new MiError("El vehiculo ya existe");
         } catch (Exception ex) {
-            throw new MiError("Problemas al cargar usuarios");
+            throw new MiError("Problemas al cargar vehiculos");
         }
 
     }
@@ -57,7 +57,7 @@ public class VehiculoDAO {
 
             return stmt.executeUpdate() > 0;
         } catch (Exception ex) {
-            throw new MiError("Falla al eliminar el modelo.");
+            throw new MiError("Falla al eliminar el vehiculo.");
         }
     }
 }
