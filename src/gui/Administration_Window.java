@@ -330,7 +330,9 @@ public class Administration_Window extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void CosultaPorCarrosAlquiladoPorFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CosultaPorCarrosAlquiladoPorFechaActionPerformed
-        // TODO add your handling code here:
+        reportePorRangoFechasVehiculosAlquilados rango = new reportePorRangoFechasVehiculosAlquilados();
+        rango.setVisible(true);
+        dispose();
     }//GEN-LAST:event_CosultaPorCarrosAlquiladoPorFechaActionPerformed
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
@@ -340,7 +342,9 @@ public class Administration_Window extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void VehiculoRegistradoAcordeEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VehiculoRegistradoAcordeEstadoActionPerformed
-        // TODO add your handling code here:
+        ReportePorVehiculosAcordeEstado estado = new ReportePorVehiculosAcordeEstado();
+        estado.setVisible(true);
+        dispose();
     }//GEN-LAST:event_VehiculoRegistradoAcordeEstadoActionPerformed
 
     private void VehiculoAsociadoAUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VehiculoAsociadoAUsuarioActionPerformed
