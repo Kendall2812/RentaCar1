@@ -119,10 +119,10 @@
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="cbxMarca" pref="56" max="32767" attributes="0"/>
                                       <Component id="cbxEstilo" alignment="0" max="32767" attributes="0"/>
                                       <Component id="cbxModelo" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="cbxTransmi" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="cbxTransmi" alignment="0" pref="102" max="32767" attributes="0"/>
+                                      <Component id="cbxMarca" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -292,11 +292,76 @@
         <Component class="javax.swing.JComboBox" name="jComboBox3">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="69">
+                <StringItem index="0" value="5:00 am"/>
+                <StringItem index="1" value="5:15 am"/>
+                <StringItem index="2" value="5:30 am"/>
+                <StringItem index="3" value="5:45 am"/>
+                <StringItem index="4" value="6:00 am"/>
+                <StringItem index="5" value="6:15 am"/>
+                <StringItem index="6" value="6:30 am"/>
+                <StringItem index="7" value="6:45 am"/>
+                <StringItem index="8" value="7:00 am"/>
+                <StringItem index="9" value="7:15 am"/>
+                <StringItem index="10" value="7:30 am"/>
+                <StringItem index="11" value="7:45 am"/>
+                <StringItem index="12" value="8:00 am"/>
+                <StringItem index="13" value="8:15 am"/>
+                <StringItem index="14" value="8:30 am"/>
+                <StringItem index="15" value="8:45 am"/>
+                <StringItem index="16" value="9:00 am"/>
+                <StringItem index="17" value="9:15 am"/>
+                <StringItem index="18" value="9:30 am"/>
+                <StringItem index="19" value="9:45 am"/>
+                <StringItem index="20" value="10:00 am"/>
+                <StringItem index="21" value="10:15 am"/>
+                <StringItem index="22" value="10:30 am"/>
+                <StringItem index="23" value="10:45 am"/>
+                <StringItem index="24" value="11:00 am"/>
+                <StringItem index="25" value="11:15 am"/>
+                <StringItem index="26" value="11:30 am"/>
+                <StringItem index="27" value="11:45 am"/>
+                <StringItem index="28" value="12:00 pm"/>
+                <StringItem index="29" value="12:15 pm"/>
+                <StringItem index="30" value="12:30 pm"/>
+                <StringItem index="31" value="12:45 pm"/>
+                <StringItem index="32" value="1:00 pm"/>
+                <StringItem index="33" value="1:15 pm"/>
+                <StringItem index="34" value="1:30 pm"/>
+                <StringItem index="35" value="1:45 pm"/>
+                <StringItem index="36" value="2:00 pm"/>
+                <StringItem index="37" value="2:15 pm"/>
+                <StringItem index="38" value="2:30 pm"/>
+                <StringItem index="39" value="2:45 pm"/>
+                <StringItem index="40" value="3:00 pm"/>
+                <StringItem index="41" value="3:15 pm"/>
+                <StringItem index="42" value="3:30 pm"/>
+                <StringItem index="43" value="3:45 pm"/>
+                <StringItem index="44" value="4:00 pm"/>
+                <StringItem index="45" value="4:15 pm"/>
+                <StringItem index="46" value="4:30 pm"/>
+                <StringItem index="47" value="4:45 pm"/>
+                <StringItem index="48" value="5:00 pm"/>
+                <StringItem index="49" value="5:15 pm"/>
+                <StringItem index="50" value="5:30 pm"/>
+                <StringItem index="51" value="5:45 pm"/>
+                <StringItem index="52" value="6:00 pm"/>
+                <StringItem index="53" value="6:15 pm"/>
+                <StringItem index="54" value="6:30 pm"/>
+                <StringItem index="55" value="6:45 pm"/>
+                <StringItem index="56" value="7:00 pm"/>
+                <StringItem index="57" value="7:15 pm"/>
+                <StringItem index="58" value="7:30 pm"/>
+                <StringItem index="59" value="7:45 pm"/>
+                <StringItem index="60" value="8:00 pm"/>
+                <StringItem index="61" value="8:15 pm"/>
+                <StringItem index="62" value="8:30 pm"/>
+                <StringItem index="63" value="8:45 pm"/>
+                <StringItem index="64" value="9:00 pm"/>
+                <StringItem index="65" value="9:15 pm"/>
+                <StringItem index="66" value="9:30 pm"/>
+                <StringItem index="67" value="9:45 pm"/>
+                <StringItem index="68" value="10:00 pm"/>
               </StringArray>
             </Property>
           </Properties>
@@ -317,11 +382,76 @@
         <Component class="javax.swing.JComboBox" name="jComboBox4">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="69">
+                <StringItem index="0" value="5:00 am"/>
+                <StringItem index="1" value="5:15 am"/>
+                <StringItem index="2" value="5:30 am"/>
+                <StringItem index="3" value="5:45 am"/>
+                <StringItem index="4" value="6:00 am"/>
+                <StringItem index="5" value="6:15 am"/>
+                <StringItem index="6" value="6:30 am"/>
+                <StringItem index="7" value="6:45 am"/>
+                <StringItem index="8" value="7:00 am"/>
+                <StringItem index="9" value="7:15 am"/>
+                <StringItem index="10" value="7:30 am"/>
+                <StringItem index="11" value="7:45 am"/>
+                <StringItem index="12" value="8:00 am"/>
+                <StringItem index="13" value="8:15 am"/>
+                <StringItem index="14" value="8:30 am"/>
+                <StringItem index="15" value="8:45 am"/>
+                <StringItem index="16" value="9:00 am"/>
+                <StringItem index="17" value="9:15 am"/>
+                <StringItem index="18" value="9:30 am"/>
+                <StringItem index="19" value="9:45 am"/>
+                <StringItem index="20" value="10:00 am"/>
+                <StringItem index="21" value="10:15 am"/>
+                <StringItem index="22" value="10:30 am"/>
+                <StringItem index="23" value="10:45 am"/>
+                <StringItem index="24" value="11:00 am"/>
+                <StringItem index="25" value="11:15 am"/>
+                <StringItem index="26" value="11:30 am"/>
+                <StringItem index="27" value="11:45 am"/>
+                <StringItem index="28" value="12:00 pm"/>
+                <StringItem index="29" value="12:15 pm"/>
+                <StringItem index="30" value="12:30 pm"/>
+                <StringItem index="31" value="12:45 pm"/>
+                <StringItem index="32" value="1:00 pm"/>
+                <StringItem index="33" value="1:15 pm"/>
+                <StringItem index="34" value="1:30 pm"/>
+                <StringItem index="35" value="1:45 pm"/>
+                <StringItem index="36" value="2:00 pm"/>
+                <StringItem index="37" value="2:15 pm"/>
+                <StringItem index="38" value="2:30 pm"/>
+                <StringItem index="39" value="2:45 pm"/>
+                <StringItem index="40" value="3:00 pm"/>
+                <StringItem index="41" value="3:15 pm"/>
+                <StringItem index="42" value="3:30 pm"/>
+                <StringItem index="43" value="3:45 pm"/>
+                <StringItem index="44" value="4:00 pm"/>
+                <StringItem index="45" value="4:15 pm"/>
+                <StringItem index="46" value="4:30 pm"/>
+                <StringItem index="47" value="4:45 pm"/>
+                <StringItem index="48" value="5:00 pm"/>
+                <StringItem index="49" value="5:15 pm"/>
+                <StringItem index="50" value="5:30 pm"/>
+                <StringItem index="51" value="5:45 pm"/>
+                <StringItem index="52" value="6:00 pm"/>
+                <StringItem index="53" value="6:15 pm"/>
+                <StringItem index="54" value="6:30 pm"/>
+                <StringItem index="55" value="6:45 pm"/>
+                <StringItem index="56" value="7:00 pm"/>
+                <StringItem index="57" value="7:15 pm"/>
+                <StringItem index="58" value="7:30 pm"/>
+                <StringItem index="59" value="7:45 pm"/>
+                <StringItem index="60" value="8:00 pm"/>
+                <StringItem index="61" value="8:15 pm"/>
+                <StringItem index="62" value="8:30 pm"/>
+                <StringItem index="63" value="8:45 pm"/>
+                <StringItem index="64" value="9:00 pm"/>
+                <StringItem index="65" value="9:15 pm"/>
+                <StringItem index="66" value="9:30 pm"/>
+                <StringItem index="67" value="9:45 pm"/>
+                <StringItem index="68" value="10:00 pm"/>
               </StringArray>
             </Property>
           </Properties>
@@ -456,7 +586,10 @@
         <Component class="javax.swing.JComboBox" name="cbxTransmi">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
+              <StringArray count="2">
+                <StringItem index="0" value="Automatica"/>
+                <StringItem index="1" value="Manual"/>
+              </StringArray>
             </Property>
           </Properties>
           <AuxValues>

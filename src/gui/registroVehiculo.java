@@ -6,6 +6,7 @@
 package gui;
 
 import bo.VehiculoBO;
+import dao.EstilosDAO;
 import dao.MarcaDAO;
 import dao.ModeloDAO;
 import entities.MiError;
@@ -35,7 +36,9 @@ public class registroVehiculo extends javax.swing.JFrame {
     private Image img2;
     ArrayList modelos = new ArrayList();
     ArrayList marcas = new ArrayList();
+    ArrayList estilo = new ArrayList();
     String tipoAccion = "";
+    
 
     public registroVehiculo(String tipoaccion) {
         initComponents();
@@ -44,6 +47,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         tipoAccion = tipoaccion;
         cargarModelos();
         cargarMarcas();
+        cargarEstilo();
         realizarAccion();
     }
 
@@ -58,13 +62,34 @@ public class registroVehiculo extends javax.swing.JFrame {
             cbxMarcas.setEnabled(true);
             cbxTransmis.setEnabled(true);
             cbxmodelos.setEnabled(true);
+            cbxEstilos.setEnabled(true);
+            btnRegistrar.setEnabled(true);
 
         } else if (tipoAccion.equals("editar")) {
-            txtAno.setEnabled(false);
+            btnFoto3.setEnabled(true);
+            txtAno3.setEnabled(true);
+            txtPlaca3.setEnabled(true);
+            txtPrecio3.setEnabled(true);
+            cbxEstado3.setEnabled(true);
+            cbxMarcas3.setEnabled(true);
+            cbxTransmis3.setEnabled(true);
+            cbxmodelos3.setEnabled(true);
+            btnModificar.setEnabled(true);
+            cbxPlacaSelec.setEnabled(true);
+            cbxEstilos3.setVisible(true);
             cargarMarcas();
 
         } else if (tipoAccion.equals("eliminar")) {
-
+//            btnFoto3.setEnabled(true);
+//            txtAno3.setEnabled(true);
+//            txtPlaca3.setEnabled(true);
+//            txtPrecio3.setEnabled(true);
+//            cbxEstado3.setEnabled(true);
+//            cbxMarcas3.setEnabled(true);
+//            cbxTransmis3.setEnabled(true);
+//            cbxmodelos3.setEnabled(true);
+            cbxPlacaSelec.setEnabled(true);
+            btnEliminar.setEnabled(true);
             cargarMarcas();
         }
     }
@@ -79,12 +104,18 @@ public class registroVehiculo extends javax.swing.JFrame {
 
     public void cargarMarcas() {
         MarcaDAO marca = new MarcaDAO();
-
         marcas = marca.cargarMarcas();
-        cbxMarcas.addItem("Selecionar");
         for (int x = 0; x < marcas.size(); x++) {
             cbxMarcas.addItem(marcas.get(x).toString());
         }
+    }
+    public void cargarEstilo() {
+        EstilosDAO esti = new EstilosDAO();
+        estilo = esti.cargarEstilos();
+        for (int x = 0; x < estilo.size(); x++) {
+            cbxEstilos.addItem(estilo.get(x).toString());
+        }
+
     }
 
     /**
@@ -113,7 +144,9 @@ public class registroVehiculo extends javax.swing.JFrame {
         cbxEstado = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         cbxTransmis = new javax.swing.JComboBox<>();
-        jButton3 = new javax.swing.JButton();
+        btnRegistrar = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        cbxEstilos = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         btnFoto3 = new javax.swing.JButton();
         jLabel23 = new javax.swing.JLabel();
@@ -130,22 +163,27 @@ public class registroVehiculo extends javax.swing.JFrame {
         cbxEstado3 = new javax.swing.JComboBox<>();
         jLabel29 = new javax.swing.JLabel();
         cbxTransmis3 = new javax.swing.JComboBox<>();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbxPlacaSelec = new javax.swing.JComboBox<>();
         jLabel30 = new javax.swing.JLabel();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        cbxEstilos3 = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         btnFoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/camara.png"))); // NOI18N
+        btnFoto.setEnabled(false);
         btnFoto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFotoActionPerformed(evt);
             }
         });
 
+        txtPlaca.setEnabled(false);
         txtPlaca.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPlacaKeyPressed(evt);
@@ -156,6 +194,7 @@ public class registroVehiculo extends javax.swing.JFrame {
 
         jLabel5.setText("Año:");
 
+        txtAno.setEnabled(false);
         txtAno.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtAnoKeyTyped(evt);
@@ -164,6 +203,7 @@ public class registroVehiculo extends javax.swing.JFrame {
 
         jLabel6.setText("Precio:");
 
+        txtPrecio.setEnabled(false);
         txtPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtPrecioKeyTyped(evt);
@@ -172,22 +212,33 @@ public class registroVehiculo extends javax.swing.JFrame {
 
         jLabel2.setText("Marca:");
 
+        cbxMarcas.setEnabled(false);
+
         jLabel3.setText("Modelo:");
+
+        cbxmodelos.setEnabled(false);
 
         jLabel7.setText("Estado:");
 
         cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Disponible", "Ocupado" }));
+        cbxEstado.setEnabled(false);
 
         jLabel4.setText("Transmisión:");
 
         cbxTransmis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manual", "Automatica" }));
+        cbxTransmis.setEnabled(false);
 
-        jButton3.setText("Registrar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnRegistrar.setText("Registrar");
+        btnRegistrar.setEnabled(false);
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnRegistrarActionPerformed(evt);
             }
         });
+
+        jLabel8.setText("Estilo:");
+
+        cbxEstilos.setEnabled(false);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -199,13 +250,14 @@ public class registroVehiculo extends javax.swing.JFrame {
                         .addGap(41, 41, 41)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cbxEstilos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(cbxTransmis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(btnFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
@@ -228,10 +280,14 @@ public class registroVehiculo extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
                                     .addComponent(jLabel2)
                                     .addGap(18, 18, 18)
-                                    .addComponent(cbxMarcas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(cbxMarcas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(85, 85, 85)
-                        .addComponent(jButton3)))
+                        .addComponent(btnRegistrar)))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -262,18 +318,23 @@ public class registroVehiculo extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(cbxEstilos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(cbxTransmis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addGap(0, 35, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnRegistrar)
+                .addGap(0, 46, Short.MAX_VALUE))
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         btnFoto3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/camara.png"))); // NOI18N
+        btnFoto3.setEnabled(false);
         btnFoto3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFoto3ActionPerformed(evt);
@@ -282,33 +343,62 @@ public class registroVehiculo extends javax.swing.JFrame {
 
         jLabel23.setText("Placa:");
 
+        txtPlaca3.setEnabled(false);
+
         jLabel24.setText("Año:");
+
+        txtAno3.setEnabled(false);
+        txtAno3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAno3KeyTyped(evt);
+            }
+        });
 
         jLabel25.setText("Precio:");
 
+        txtPrecio3.setEnabled(false);
+        txtPrecio3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPrecio3KeyTyped(evt);
+            }
+        });
+
         jLabel26.setText("Marca:");
 
+        cbxMarcas3.setEnabled(false);
+
         jLabel27.setText("Modelo:");
+
+        cbxmodelos3.setEnabled(false);
 
         jLabel28.setText("Estado:");
 
         cbxEstado3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Disponible", "Ocupado" }));
+        cbxEstado3.setEnabled(false);
 
         jLabel29.setText("Transmisión:");
 
         cbxTransmis3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Manual", "Automatica" }));
+        cbxTransmis3.setEnabled(false);
 
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cbxPlacaSelec.setEnabled(false);
+        cbxPlacaSelec.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cbxPlacaSelecActionPerformed(evt);
             }
         });
 
         jLabel30.setText("Seleccionar placa:");
 
-        jButton1.setText("Modificar Vehiculo");
+        btnModificar.setText("Modificar Vehiculo");
+        btnModificar.setEnabled(false);
 
-        jButton2.setText("Eliminar vehiculo");
+        btnEliminar.setText("Eliminar vehiculo");
+        btnEliminar.setEnabled(false);
+
+        jLabel9.setText("Estilo:");
+
+        cbxEstilos3.setEnabled(false);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -320,9 +410,9 @@ public class registroVehiculo extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel29)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxTransmis3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel9)
+                                .addGap(18, 18, 18)
+                                .addComponent(cbxEstilos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel28)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -355,12 +445,17 @@ public class registroVehiculo extends javax.swing.JFrame {
                         .addGap(23, 23, 23)
                         .addComponent(jLabel30)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cbxPlacaSelec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1)
+                        .addComponent(btnModificar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(btnEliminar))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbxTransmis3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -368,7 +463,7 @@ public class registroVehiculo extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxPlacaSelec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel30))
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -399,16 +494,27 @@ public class registroVehiculo extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel28)
                             .addComponent(cbxEstado3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel29)
-                            .addComponent(cbxTransmis3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(42, 42, 42)
+                            .addComponent(jLabel9)
+                            .addComponent(cbxEstilos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel29)
+                    .addComponent(cbxTransmis3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnModificar)
+                    .addComponent(btnEliminar))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
+
+        jButton1.setText("Regresar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -420,6 +526,10 @@ public class registroVehiculo extends javax.swing.JFrame {
                 .addGap(21, 21, 21)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,7 +538,9 @@ public class registroVehiculo extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -482,46 +594,74 @@ public class registroVehiculo extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnFoto3ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cbxPlacaSelecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxPlacaSelecActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+        
+    }//GEN-LAST:event_cbxPlacaSelecActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         // TODO add your handling code here:
         Vehiculo vehi = new Vehiculo();
         try {
-            vehi.setAño(Integer.parseInt(txtAno.getText()));
-            vehi.setEstado((String) cbxEstado.getSelectedItem());
-            vehi.setMarca((String) cbxMarcas.getSelectedItem());
-            vehi.setTransmision((String) cbxTransmis.getSelectedItem());
-            vehi.setPlaca(txtPlaca.getText());
-            vehi.setModelo((String) cbxmodelos.getSelectedItem());
-            vehi.setPrecio(Integer.parseInt(txtPrecio.getText()));
             vehi.setFoto(img2);
-
+            vehi.setPlaca(txtPlaca.getText());
+            vehi.setAño(Integer.parseInt(txtAno.getText()));
+            vehi.setPrecio(Integer.parseInt(txtPrecio.getText()));
+            vehi.setMarca((String) cbxMarcas.getSelectedItem());
+            vehi.setModelo((String) cbxmodelos.getSelectedItem());
+            vehi.setEstado((String) cbxEstado.getSelectedItem());
+            vehi.setEstilo((String) cbxEstilos.getSelectedItem());
+            vehi.setTransmision((String) cbxTransmis.getSelectedItem());
+            
             VehiculoBO veBo = new VehiculoBO();
-            if (veBo.registrarVehi(vehi)){
-                JOptionPane.showMessageDialog(null,"Vehiculo registrado correctamente");
-            }else{
-                JOptionPane.showMessageDialog(null,"Intente nuevamente");
+            if (veBo.registrarVehi(vehi)) {
+                JOptionPane.showMessageDialog(null, "Vehiculo registrado correctamente");
+            } else {
+                JOptionPane.showMessageDialog(null, "Intente nuevamente");
             }
-        } catch (MiError ex) {
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Solo numeros en año y precio");
+        }catch (MiError ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
-        }catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(null,"Solo numeros en año y precio");
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
+        } 
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioKeyTyped
         // TODO add your handling code here:
         char numero = evt.getKeyChar();
-
         if (Character.isLetter(numero)) {
             getToolkit().beep();
             evt.consume();
             JOptionPane.showMessageDialog(null, "Ingrese solo Números");
         }
     }//GEN-LAST:event_txtPrecioKeyTyped
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Administration_Window view = new Administration_Window();
+        view.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtAno3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAno3KeyTyped
+        // TODO add your handling code here:
+        char numero = evt.getKeyChar();
+        if (Character.isLetter(numero)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Ingrese solo Números");
+        }
+    }//GEN-LAST:event_txtAno3KeyTyped
+
+    private void txtPrecio3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecio3KeyTyped
+        // TODO add your handling code here:
+        char numero = evt.getKeyChar();
+        if (Character.isLetter(numero)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Ingrese solo Números");
+        }
+    }//GEN-LAST:event_txtPrecio3KeyTyped
 
     /**
      * @param args the command line arguments
@@ -559,21 +699,24 @@ public class registroVehiculo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnFoto;
     private javax.swing.JButton btnFoto3;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnRegistrar;
     private javax.swing.JComboBox<String> cbxEstado;
     private javax.swing.JComboBox<String> cbxEstado3;
+    private javax.swing.JComboBox<String> cbxEstilos;
+    private javax.swing.JComboBox<String> cbxEstilos3;
     private javax.swing.JComboBox<String> cbxMarcas;
     private javax.swing.JComboBox<String> cbxMarcas3;
+    private javax.swing.JComboBox<String> cbxPlacaSelec;
     private javax.swing.JComboBox<String> cbxTransmis;
     private javax.swing.JComboBox<String> cbxTransmis3;
     private javax.swing.JComboBox<String> cbxmodelos;
     private javax.swing.JComboBox<String> cbxmodelos3;
     private javax.swing.JFileChooser fcFoto;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel23;
@@ -589,6 +732,8 @@ public class registroVehiculo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTextField txtAno;

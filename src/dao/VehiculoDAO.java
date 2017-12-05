@@ -24,7 +24,7 @@ public class VehiculoDAO {
 
     public boolean insertarVehi(Vehiculo v) {
         try (Connection con = Conexion.conexion()) {
-            String sql = "insert into vehiculo(placa, marca, modelo,trasmision,año,estilo,precio,foto,estado) "
+            String sql = "insert into vehiculo(placa,marca,modelo,transmision,año,estilo,precio,foto,estado) "
                     + "values (?,?,?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -36,14 +36,14 @@ public class VehiculoDAO {
             stmt.setString(4, v.getTransmision());
             stmt.setInt(5, v.getAño());
             stmt.setString(6, v.getEstilo());
-            stmt.setInt(7, v.getPrecio());
+            stmt.setInt(7, v.getPrecio());           
             stmt.setBinaryStream(8, fis);
             stmt.setString(9, v.getEstado());
 
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException s) {
-            throw new MiError("El vehiculo ya existe");
+            throw new MiError(s.getMessage());
         } catch (Exception ex) {
             throw new MiError("Problemas al cargar vehiculos");
         }

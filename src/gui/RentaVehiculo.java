@@ -5,6 +5,9 @@
  */
 package gui;
 
+import dao.EstilosDAO;
+import dao.MarcaDAO;
+import dao.ModeloDAO;
 import dao.OficinaDAO;
 import entities.Oficina;
 import static gui.RentaVehiculo.cal;
@@ -14,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -37,6 +41,9 @@ public class RentaVehiculo extends javax.swing.JFrame {
     public static Calendar cal = Calendar.getInstance();
     Date fechaRe;
     Date fechaDe;
+    ArrayList modelos = new ArrayList();
+    ArrayList marcas = new ArrayList();
+    ArrayList estilo = new ArrayList();
     DefaultTableModel modelo = new DefaultTableModel() {
         @Override
         public Class getColumnClass(int indiceColumna) {
@@ -56,6 +63,9 @@ public class RentaVehiculo extends javax.swing.JFrame {
         this.setTitle("RENTA VEHICULOS");
         this.setLocationRelativeTo(null);
         cargarOficina();
+        cargarMarcas();
+        cargarModelos();
+        cargarEstilo();
 
         ImageIcon icono = new ImageIcon(getClass().getResource("/image/usuario.png"));
 
@@ -102,23 +112,44 @@ public class RentaVehiculo extends javax.swing.JFrame {
     }
 
     public void cargarModelos() {
+        ModeloDAO modelo1 = new ModeloDAO();
+        modelos = modelo1.cargarModelo();
+        for (int x = 0; x < modelos.size(); x++) {
+            cbxModelo.addItem(modelos.get(x).toString());
+        }
+    }
+
+    public void cargarMarcas() {
+        MarcaDAO marca = new MarcaDAO();
+        marcas = marca.cargarMarcas();
+        for (int x = 0; x < marcas.size(); x++) {
+            cbxMarca.addItem(marcas.get(x).toString());
+        }
+    }
+
+    public void cargarEstilo() {
+        EstilosDAO esti = new EstilosDAO();
+        estilo = esti.cargarEstilos();
+        for (int x = 0; x < estilo.size(); x++) {
+            cbxEstilo.addItem(estilo.get(x).toString());
+        }
 
     }
 
-    public void obtenerCantDias(){
-        int dias= -1;
-        if (jDateRetiro.getDate() != null && jDateDevol.getDate() !=null){
-            Calendar fecha_inicio= jDateRetiro.getCalendar();
-            Calendar fecha_final= jDateDevol.getCalendar();
-           while(fecha_inicio.before(fecha_final)|| fecha_inicio.equals(fecha_final)){
-               dias++;
-               fecha_inicio.add(Calendar.DATE,1);
-           } 
-           txtPrecio.setText("dias: "+ dias);
-        }else{
-            JOptionPane.showMessageDialog(null, "Seleccione las fechas", "Calcular Dias",JOptionPane.ERROR_MESSAGE);
+    public void obtenerCantDias() {
+        int dias = -1;
+        if (jDateRetiro.getDate() != null && jDateDevol.getDate() != null) {
+            Calendar fecha_inicio = jDateRetiro.getCalendar();
+            Calendar fecha_final = jDateDevol.getCalendar();
+            while (fecha_inicio.before(fecha_final) || fecha_inicio.equals(fecha_final)) {
+                dias++;
+                fecha_inicio.add(Calendar.DATE, 1);
+            }
+            txtPrecio.setText("dias: " + dias);
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione las fechas", "Calcular Dias", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }
 
     /**
@@ -182,13 +213,13 @@ public class RentaVehiculo extends javax.swing.JFrame {
             }
         });
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
 
         jLabel5.setText("Hora de retiro:");
 
         jLabel6.setText("Hora de devolución :");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
 
         jLabel7.setText("Articulos Adicionales:");
 
@@ -264,6 +295,8 @@ public class RentaVehiculo extends javax.swing.JFrame {
             }
         });
 
+        cbxTransmi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Automatica", "Manual" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -312,10 +345,10 @@ public class RentaVehiculo extends javax.swing.JFrame {
                                     .addComponent(rbtMarca))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbxMarca, 0, 56, Short.MAX_VALUE)
                                     .addComponent(cbxEstilo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(cbxModelo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbxTransmi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(cbxTransmi, 0, 102, Short.MAX_VALUE)
+                                    .addComponent(cbxMarca, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(rbtAño)

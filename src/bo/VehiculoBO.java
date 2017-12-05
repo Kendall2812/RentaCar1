@@ -43,16 +43,19 @@ public class VehiculoBO {
         if (vehi.getPrecio() == 0) {
             throw new MiError("Requiere el precio");
         }
-        VehiculoDAO veDao= new VehiculoDAO();
-
+        if (vehi.getEstilo().isEmpty()) {
+            throw new MiError("Requiere el estilo");
+        }
+        VehiculoDAO veDao = new VehiculoDAO();
         return veDao.insertarVehi(vehi);
 
     }
-     public boolean EliminarVehiculo(Vehiculo vehi) throws SQLException {
+
+    public boolean EliminarVehiculo(Vehiculo vehi) throws SQLException {
         if (vehi.getPlaca().isEmpty()) {
             throw new MiError("Se requiere la placa");
         }
-        VehiculoDAO veDao= new VehiculoDAO();
+        VehiculoDAO veDao = new VehiculoDAO();
         return veDao.EliminarVehi(vehi);
-    } 
+    }
 }
