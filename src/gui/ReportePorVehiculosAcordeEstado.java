@@ -29,6 +29,7 @@ public class ReportePorVehiculosAcordeEstado extends javax.swing.JFrame {
         }else if(estado.equals("Disponible")){
             System.out.println("Disponible");
         }else{
+            
             System.out.println("No puede quedar sin seleccionar");
         }
         

@@ -26,6 +26,7 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
     public void reporteRangoFecha(){
         fecha1 = jDateChFechaInicio.getDate();
         fecha2 = jDateChFechaFinal.getDate();
+        
     }
 
     /**
