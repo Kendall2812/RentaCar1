@@ -11,6 +11,7 @@ import entities.MiError;
 import entities.Oficina;
 import entities.Vehiculo;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -57,5 +58,12 @@ public class VehiculoBO {
         }
         VehiculoDAO veDao = new VehiculoDAO();
         return veDao.EliminarVehi(vehi);
+    }
+    public ArrayList reporteConsultaPorEstado(Vehiculo vehi){
+        if(vehi.getEstado().isEmpty()){
+            throw new MiError("Requiere el estado.");
+        }
+        VehiculoDAO veDao = new VehiculoDAO();
+        return veDao.cargarVehiculoEstado(vehi);
     }
 }

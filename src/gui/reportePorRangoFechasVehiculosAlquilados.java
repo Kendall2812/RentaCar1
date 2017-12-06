@@ -5,7 +5,10 @@
  */
 package gui;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Date;
+//import javax.swing.text.Document;
 
 /**
  *
@@ -23,10 +26,9 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
         this.setLocationRelativeTo(null);
         this.setTitle("Vehiculos Alquilados Por Rango de Fecha.");
     }
-    public void reporteRangoFecha(){
+    public void reporteRangoFecha() throws FileNotFoundException{
         fecha1 = jDateChFechaInicio.getDate();
         fecha2 = jDateChFechaFinal.getDate();
-        
     }
 
     /**

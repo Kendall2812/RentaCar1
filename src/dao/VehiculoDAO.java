@@ -7,13 +7,16 @@ package dao;
 
 import entities.MiError;
 import entities.Vehiculo;
+import java.awt.Image;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
@@ -59,5 +62,27 @@ public class VehiculoDAO {
         } catch (Exception ex) {
             throw new MiError("Falla al eliminar el vehiculo.");
         }
+    }
+    public ArrayList cargarVehiculoEstado(Vehiculo vehi) {
+        ArrayList estado = new ArrayList();
+        Image imgdb = null;
+        try (Connection con = Conexion.conexion()) {
+            String sql = "SELECT placa, marca, modelo, estilo FROM vehiculo WHERE estado = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, vehi.getEstado());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                estado.add(rs.getString("placa"));
+                estado.add(rs.getString("marca"));
+                estado.add(rs.getString("modelo"));
+                estado.add(rs.getString("estilo"));
+//                InputStream fis = rs.getBinaryStream("foto");
+//                imgdb = ImageIO.read(fis);
+//                estado.add(imgdb);
+            }
+        } catch (Exception ex) {
+            throw new MiError("Error al extaer la informacion de los vehiculos." + ex);
+        }
+        return estado;
     }
 }
