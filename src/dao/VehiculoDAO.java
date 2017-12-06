@@ -46,7 +46,7 @@ public class VehiculoDAO {
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException s) {
-            throw new MiError(s.getMessage());
+            throw new MiError("El vehiculo ya se encuentra registrado");
         } catch (Exception ex) {
             throw new MiError("Problemas al cargar vehiculos");
         }
