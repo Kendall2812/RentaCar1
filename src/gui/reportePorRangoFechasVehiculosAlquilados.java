@@ -4,10 +4,29 @@
  * and open the template in the editor.
  */
 package gui;
-
+        
+import bo.RentaBO;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import entities.Renta;
+import entities.Vehiculo;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 //import javax.swing.text.Document;
 
 /**
@@ -21,14 +40,102 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
      */
     Date fecha1;
     Date fecha2;
+    ArrayList Fechas = new ArrayList();
+    String nombre;
+    String cedula2;
+    int cedula;
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
     public reportePorRangoFechasVehiculosAlquilados() {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setTitle("Vehiculos Alquilados Por Rango de Fecha.");
     }
-    public void reporteRangoFecha() throws FileNotFoundException{
+
+    public void reporteRangoFecha() throws FileNotFoundException {
+        nombre = "Reporte por Rango de Fechas.";
         fecha1 = jDateChFechaInicio.getDate();
         fecha2 = jDateChFechaFinal.getDate();
+        Renta fechas = new Renta();
+        Vehiculo datos = new Vehiculo();
+        try {
+            fechas.setFechaRetiro(dateFormat.format(fecha1));
+            fechas.setFechaDevolu(dateFormat.format(fecha2));
+            RentaBO resultEstado = new RentaBO();
+            Fechas = resultEstado.extraerPorRangoFechas(fechas);
+            if (Fechas.isEmpty() == false) {
+                fecha1 = jDateChFechaInicio.getDate();
+                String Finicial = dateFormat.format(fecha1);
+                fecha2 = jDateChFechaFinal.getDate();
+                String Ffinal = dateFormat.format(fecha2);
+
+                FileOutputStream archivo = new FileOutputStream(nombre + ".pdf");
+                Document documento = new Document();
+                PdfWriter.getInstance(documento, archivo);
+                documento.open();
+
+                PdfPTable tabla = new PdfPTable(5);
+                Paragraph texto = new Paragraph("Vehiculos alquilados por Rango de Fecha\n\n", FontFactory.getFont("Arial", 16, Font.ITALIC, BaseColor.BLUE));
+                texto.setAlignment(Element.ALIGN_CENTER);
+                documento.add(texto);
+
+                documento.add(new Paragraph(""));
+
+                float[] mediaCeldas = {3.50f, 3.50f, 3.50f, 3.50f, 3.50f}; //tamaño de las celdas
+
+                tabla.setWidths(mediaCeldas);
+                tabla.addCell(new Paragraph("Placa Vehiculo", FontFactory.getFont("Arial", 12)));
+                tabla.addCell(new Paragraph("Cedula", FontFactory.getFont("Arial", 12)));
+                tabla.addCell(new Paragraph("Nombre del Usuario", FontFactory.getFont("Arial", 12)));
+                tabla.addCell(new Paragraph("Fecha de Retiro", FontFactory.getFont("Arial", 12)));
+                tabla.addCell(new Paragraph("Fecha de Devolución", FontFactory.getFont("Arial", 12)));
+
+                Paragraph texto2 = new Paragraph("Fecha de Incio: " + Finicial, FontFactory.getFont("Arial", 10));
+                texto2.setAlignment(Element.ALIGN_LEFT);
+                documento.add(texto2);
+                Paragraph texto3 = new Paragraph("Fecha Limite: " + Ffinal, FontFactory.getFont("Arial", 10));
+                texto3.setAlignment(Element.ALIGN_LEFT);
+                documento.add(texto3);
+                documento.add(new Paragraph("\n"));
+
+                for (int x = 0; x < Fechas.size(); x++) {
+                    datos.setPlaca((String) Fechas.get(x));
+                    cedula2 = Fechas.get(x + 1).toString();
+                    cedula = Integer.parseInt(cedula2);
+                    fechas.setCedula(cedula);
+                    fechas.setNombre(Fechas.get(x + 2).toString());
+                    fechas.setFechaRetiro(Fechas.get(x + 3).toString());
+                    fechas.setFechaDevolu(Fechas.get(x + 4).toString());
+
+                    cedula = fechas.getCedula();
+                    cedula2 = String.valueOf(cedula);
+                    tabla.addCell(new Paragraph(datos.getPlaca(), FontFactory.getFont("Arial", 10)));
+                    tabla.addCell(new Paragraph(cedula2, FontFactory.getFont("Arial", 10)));
+                    tabla.addCell(new Paragraph(fechas.getNombre(), FontFactory.getFont("Arial", 10)));
+                    tabla.addCell(new Paragraph(fechas.getFechaRetiro(), FontFactory.getFont("Arial", 10)));
+                    tabla.addCell(new Paragraph(fechas.getFechaDevolu(), FontFactory.getFont("Arial", 10)));
+
+                    x = x + 4;
+                }
+                Fechas.clear();
+                documento.add(tabla);
+                documento.close();
+
+                //Esta parte abre el documento
+                try {
+                    File path = new File(nombre + ".pdf");
+                    Desktop.getDesktop().open(path);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "No se pudo abrir el documento. " + e);
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontraron datos entre el rango seleccionado");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "No se encontraron datos entre el rango seleccionado. " + e);
+        }
     }
 
     /**
@@ -45,7 +152,7 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
         jLabel2 = new javax.swing.JLabel();
         jDateChFechaFinal = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -59,8 +166,13 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
         jLabel3.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         jLabel3.setText("Selecionar Fechas");
 
-        jButton1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jButton1.setText("Imprimir");
+        btnImprimir.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnImprimir.setText("Imprimir");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         btnRegresar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnRegresar.setText("Regresar");
@@ -81,14 +193,14 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jDateChFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(67, 67, 67)
+                            .addComponent(jDateChFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(79, 79, 79)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jDateChFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jDateChFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)))
                     .addComponent(btnRegresar)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(391, Short.MAX_VALUE))
+                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(293, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,7 +219,7 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
                         .addGap(18, 18, 18)
                         .addComponent(jDateChFechaFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnImprimir)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegresar)
                 .addGap(52, 52, 52))
@@ -121,6 +233,14 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
         regresar.setVisible(true);
         dispose();
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        try {
+            reporteRangoFecha();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(reportePorRangoFechasVehiculosAlquilados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -158,8 +278,8 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnRegresar;
-    private javax.swing.JButton jButton1;
     private com.toedter.calendar.JDateChooser jDateChFechaFinal;
     private com.toedter.calendar.JDateChooser jDateChFechaInicio;
     private javax.swing.JLabel jLabel1;

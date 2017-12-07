@@ -67,7 +67,7 @@ public class VehiculoDAO {
         ArrayList estado = new ArrayList();
         Image imgdb = null;
         try (Connection con = Conexion.conexion()) {
-            String sql = "SELECT placa, marca, modelo, estilo FROM vehiculo WHERE estado = ?";
+            String sql = "SELECT placa, cedula, nombreusuario, fecharetiro, fechadevo FROM renta WHERE fecharetiro BETWEEN ? and ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, vehi.getEstado());
             ResultSet rs = stmt.executeQuery();
@@ -76,9 +76,6 @@ public class VehiculoDAO {
                 estado.add(rs.getString("marca"));
                 estado.add(rs.getString("modelo"));
                 estado.add(rs.getString("estilo"));
-//                InputStream fis = rs.getBinaryStream("foto");
-//                imgdb = ImageIO.read(fis);
-//                estado.add(imgdb);
             }
         } catch (Exception ex) {
             throw new MiError("Error al extaer la informacion de los vehiculos." + ex);
