@@ -29,19 +29,19 @@
                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jDateChFechaInicio" alignment="0" min="-2" pref="117" max="-2" attributes="0"/>
+                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jDateChFechaInicio" min="-2" pref="160" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jDateChFechaFinal" min="-2" pref="117" max="-2" attributes="0"/>
+                          <Component id="jDateChFechaFinal" min="-2" pref="160" max="-2" attributes="0"/>
                           <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Component id="btnRegresar" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton1" alignment="0" min="-2" pref="91" max="-2" attributes="0"/>
+                  <Component id="btnImprimir" alignment="0" min="-2" pref="91" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="391" max="32767" attributes="0"/>
+              <EmptySpace pref="293" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -65,7 +65,7 @@
                   </Group>
               </Group>
               <EmptySpace pref="171" max="32767" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <Component id="btnImprimir" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnRegresar" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
@@ -102,13 +102,16 @@
         <Property name="text" type="java.lang.String" value="Selecionar Fechas"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnImprimir">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Arial" size="14" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Imprimir"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImprimirActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnRegresar">
       <Properties>

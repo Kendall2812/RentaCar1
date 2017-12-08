@@ -35,6 +35,10 @@ public class Renta {
         this.cedula = cedula;
         this.precio = precio;
     }
+    
+    public Renta() {
+
+    }
 
     public String getPlaca() {
         return placa;

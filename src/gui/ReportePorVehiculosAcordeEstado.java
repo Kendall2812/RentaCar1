@@ -66,10 +66,6 @@ public class ReportePorVehiculosAcordeEstado extends javax.swing.JFrame {
                         documento.add(new Paragraph("Marca: " + estadoVehi.get(x+1)));
                         documento.add(new Paragraph("Modelo: " + estadoVehi.get(x+2)));
                         documento.add(new Paragraph("Estilo: " + estadoVehi.get(x+3)));
-//                        imagen = imagen2;
-//                        imagen.scaleAbsolute(100, 100);
-//                        imagen.setAlignment(Element.ALIGN_CENTER);
-//                        documento.add(imagen);
                         documento.add(new Paragraph("\n"));
                         x = x + 3;
                     }
