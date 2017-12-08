@@ -12,10 +12,7 @@ import dao.OficinaDAO;
 import entities.Oficina;
 import static gui.RentaVehiculo.cal;
 import java.awt.Color;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,12 +72,19 @@ public class RentaVehiculo extends javax.swing.JFrame {
         modelo.addColumn("Nombre", new Object[]{"jenni"});
         tabla.setRowHeight(100);
         this.tabla.setModel(modelo);
-        txtAño.setVisible(false);
+        
         cal.add(Calendar.YEAR, +2000);//2000 year after
         Date min = cal.getTime();
         Date max = new Date();//actual date
         jDateRetiro.setSelectableDateRange(max, min);
         jDateDevol.setSelectableDateRange(max, min);
+        
+        txtAño.setVisible(false);
+        txtPrecio.setVisible(false);
+        cbxEstilo.setVisible(false);
+        cbxMarca.setVisible(false);
+        cbxModelo.setVisible(false);
+        cbxTransmi.setVisible(false);
     }
 
     public void adicionales() {
@@ -97,7 +101,6 @@ public class RentaVehiculo extends javax.swing.JFrame {
         adicionales = adi;
 
     }
-
     public void filtro() {
 
     }
@@ -145,7 +148,6 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 dias++;
                 fecha_inicio.add(Calendar.DATE, 1);
             }
-            txtPrecio.setText("dias: " + dias);
         } else {
             JOptionPane.showMessageDialog(null, "Seleccione las fechas", "Calcular Dias", JOptionPane.ERROR_MESSAGE);
         }
@@ -339,11 +341,15 @@ public class RentaVehiculo extends javax.swing.JFrame {
                             .addComponent(jLabel8)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rbttransmision)
-                                    .addComponent(rbtModelo)
-                                    .addComponent(rbtEstilo)
-                                    .addComponent(rbtMarca))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(rbtModelo)
+                                            .addComponent(rbtEstilo)
+                                            .addComponent(rbtMarca))
+                                        .addGap(28, 28, 28))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(rbttransmision)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(cbxEstilo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(cbxModelo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -360,7 +366,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(119, 119, 119)
                         .addComponent(jButton1)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 188, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -424,10 +430,11 @@ public class RentaVehiculo extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(rbttransmision)
-                                .addGap(18, 18, 18)
+                                .addGap(41, 41, 41)
                                 .addComponent(jButton1))
-                            .addComponent(cbxTransmi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbxTransmi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rbttransmision))))
                     .addComponent(cbxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(35, Short.MAX_VALUE))
         );
@@ -467,7 +474,7 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
         .addGroup(layout.createSequentialGroup()
             .addGap(28, 28, 28)
             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
             .addComponent(tabla, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -489,11 +496,20 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void rbttransmisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbttransmisionActionPerformed
         // TODO add your handling code here:
+        if (rbttransmision.isSelected()) {
+            cbxTransmi.setVisible(true);
+        } else {
+            cbxTransmi.setVisible(false);
+        }
     }//GEN-LAST:event_rbttransmisionActionPerformed
 
     private void rbtModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtModeloActionPerformed
         // TODO add your handling code here:
-
+        if (rbtModelo.isSelected()) {
+            cbxModelo.setVisible(true);
+        } else {
+            cbxModelo.setVisible(false);
+        }
     }//GEN-LAST:event_rbtModeloActionPerformed
 
     private void rbtGpsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtGpsActionPerformed
@@ -530,17 +546,29 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void rbtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtPrecioActionPerformed
         // TODO add your handling code here:
-
+        if (rbtPrecio.isSelected()) {
+            txtPrecio.setVisible(true);
+        } else {
+            txtPrecio.setVisible(false);
+        }
     }//GEN-LAST:event_rbtPrecioActionPerformed
 
     private void rbtMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtMarcaActionPerformed
         // TODO add your handling code here:
-
+        if (rbtMarca.isSelected()) {
+            cbxMarca.setVisible(true);
+        } else {
+            cbxMarca.setVisible(false);
+        }
     }//GEN-LAST:event_rbtMarcaActionPerformed
 
     private void rbtEstiloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtEstiloActionPerformed
         // TODO add your handling code here:
-
+        if (rbtEstilo.isSelected()) {
+            cbxEstilo.setVisible(true);
+        } else {
+            cbxEstilo.setVisible(false);
+        }
     }//GEN-LAST:event_rbtEstiloActionPerformed
 
     /**
