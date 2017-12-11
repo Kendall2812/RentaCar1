@@ -216,7 +216,13 @@ public class FrmUser extends javax.swing.JFrame {
 
             if (uBo.registrarUser(u)) {
                 lblError.setText("Usuario Registrado con Éxito.");
-
+                txtCedula.setText("");
+                txtTelefono.setText("");
+                txtNombre.setText("");
+                txtContra.setText("");
+                txtDireccion.setText("");
+                ImageIcon icono = new ImageIcon(getClass().getResource("/image/camara.png"));
+                btnFoto.setIcon(icono);
             } else {
                 lblError.setText("Intente nuevamente.");
             }
@@ -262,10 +268,10 @@ public class FrmUser extends javax.swing.JFrame {
         //        UsuAdmDAO dao = new UsuAdmDAO();
         //       LinkedList<UsuAdm> usuarios = dao.cargarTodo1(0);
         //        for (UsuAdm usuario : usuarios) {
-            //            if (usuario.getCedula()== 207500700){
-                //                btnFoto.setIcon(new ImageIcon (usuario.getFoto().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_DEFAULT)));
-                //            }
-            //        }
+        //            if (usuario.getCedula()== 207500700){
+        //                btnFoto.setIcon(new ImageIcon (usuario.getFoto().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_DEFAULT)));
+        //            }
+        //        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
