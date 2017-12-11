@@ -7,15 +7,23 @@ package dao;
 
 import entities.MiError;
 import entities.Renta;
+import entities.UsuAdm;
 import java.awt.Image;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 //import java.sql.Date;
 
@@ -24,6 +32,7 @@ import javax.swing.JOptionPane;
  * @author Kendall
  */
 public class RentaDAO {
+
     public ArrayList reporteDeRangoFechasRenta(Renta rent) {
         ArrayList fechas = new ArrayList();
         Date fecha1, fecha2;
@@ -36,7 +45,7 @@ public class RentaDAO {
             fecha2 = dateFormat.parse(rent.getFechaDevolu());
             fechaFinal = new java.sql.Date(fecha2.getTime());
         } catch (Exception e) {
-           JOptionPane.showMessageDialog(null, "Error a la hora de comvertir las fechas. " + e);
+            JOptionPane.showMessageDialog(null, "Error a la hora de comvertir las fechas. " + e);
         }
 
         try (Connection con = Conexion.conexion()) {
@@ -57,5 +66,35 @@ public class RentaDAO {
             throw new MiError("Error al extaer la informacion de los vehiculos." + ex);
         }
         return fechas;
+    }
+
+    public boolean insertarRenta(Renta r) {
+        try (Connection con = Conexion.conexion()) {
+
+            String sql = "insert into renta (placa, cedula, nombreusuario, ofiretiro, ofidevolu, fecharetiro, horaretiro,"
+                    + "fechadevo, horadevolu, preciofinal) "
+                    + "values (?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            SimpleDateFormat formateador = new SimpleDateFormat("yyyy/MM/dd");
+
+            stmt.setString(1, r.getPlaca());
+            stmt.setInt(2, r.getCedula());
+            stmt.setString(3, r.getNombre());
+            stmt.setString(4, r.getOfiRetiro());
+            stmt.setString(5, r.getOfiDevolu());
+            stmt.setDate(6, (java.sql.Date) formateador.parse(r.getFechaRetiro()));
+            stmt.setTime(7, Time.valueOf(r.getHoraRetiro()));
+            stmt.setDate(8, (java.sql.Date) formateador.parse(r.getFechaDevolu()));
+            stmt.setTime(9, Time.valueOf(r.getHoraDevolu()));
+            stmt.setInt(10, r.getPrecio());
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException s) {
+            throw new MiError("");
+        } catch (Exception ex) {
+            throw new MiError("Problemas al cargar renta");
+        }
+
     }
 }

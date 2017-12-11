@@ -10,6 +10,7 @@ package entities;
  * @author jenni
  */
 public class Renta {
+
     private String placa;
     private String nombre;
     private String ofiRetiro;
@@ -18,11 +19,10 @@ public class Renta {
     private String horaRetiro;
     private String fechaDevolu;
     private String horaDevolu;
-    private String estado;
     private int cedula;
     private int precio;
 
-    public Renta(String placa, String nombre, String ofiRetiro, String ofiDevolu, String fechaRetiro, String horaRetiro, String fechaDevolu, String horaDevolu, String estado, int cedula, int precio) {
+    public Renta(String placa, String nombre, String ofiRetiro, String ofiDevolu, String fechaRetiro, String horaRetiro, String fechaDevolu, String horaDevolu, int cedula, int precio) {
         this.placa = placa;
         this.nombre = nombre;
         this.ofiRetiro = ofiRetiro;
@@ -31,11 +31,10 @@ public class Renta {
         this.horaRetiro = horaRetiro;
         this.fechaDevolu = fechaDevolu;
         this.horaDevolu = horaDevolu;
-        this.estado = estado;
         this.cedula = cedula;
         this.precio = precio;
     }
-    
+
     public Renta() {
 
     }
@@ -104,14 +103,6 @@ public class Renta {
         this.horaDevolu = horaDevolu;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
     public int getCedula() {
         return cedula;
     }
@@ -127,5 +118,5 @@ public class Renta {
     public void setPrecio(int precio) {
         this.precio = precio;
     }
-    
+
 }

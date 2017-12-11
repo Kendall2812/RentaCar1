@@ -101,16 +101,4 @@ public class UsuAdmDAO {
 
     }
 
-    public boolean eliminar(UsuAdm a) {
-        try (Connection con = Conexion.conexion()) {
-            String sql = "delete from users where cedula = ? AND tipo = false";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, a.getCedula());
-            return stmt.executeUpdate() > 0;
-
-        } catch (Exception ex) {
-            throw new MiError("No se pudo eliminar el usuario, favor intente nuevamente");
-        }
-       
-    }
 }

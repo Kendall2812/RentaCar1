@@ -5,23 +5,29 @@
  */
 package gui;
 
+import bo.RentaBO;
 import bo.VehiculoBO;
 import dao.EstilosDAO;
 import dao.MarcaDAO;
 import dao.ModeloDAO;
+import dao.VehiculoDAO;
 import entities.MiError;
+import entities.Renta;
 import entities.Vehiculo;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -38,7 +44,6 @@ public class registroVehiculo extends javax.swing.JFrame {
     ArrayList marcas = new ArrayList();
     ArrayList estilo = new ArrayList();
     String tipoAccion = "";
-    
 
     public registroVehiculo(String tipoaccion) {
         initComponents();
@@ -49,6 +54,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         cargarMarcas();
         cargarEstilo();
         realizarAccion();
+        cargarPlacas();
     }
 
     public void realizarAccion() {
@@ -76,21 +82,13 @@ public class registroVehiculo extends javax.swing.JFrame {
             cbxmodelos3.setEnabled(true);
             btnModificar.setEnabled(true);
             cbxPlacaSelec.setEnabled(true);
-            cbxEstilos3.setVisible(true);
-            cargarMarcas();
+            cbxEstilos3.setEnabled(true);
 
         } else if (tipoAccion.equals("eliminar")) {
-//            btnFoto3.setEnabled(true);
-//            txtAno3.setEnabled(true);
-//            txtPlaca3.setEnabled(true);
-//            txtPrecio3.setEnabled(true);
-//            cbxEstado3.setEnabled(true);
-//            cbxMarcas3.setEnabled(true);
-//            cbxTransmis3.setEnabled(true);
-//            cbxmodelos3.setEnabled(true);
-            cbxPlacaSelec.setEnabled(true);
+            borrartable();
+            cargarTabla();
+            cargarPlacas();
             btnEliminar.setEnabled(true);
-            cargarMarcas();
         }
     }
 
@@ -99,6 +97,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         modelos = modelo.cargarModelo();
         for (int x = 0; x < modelos.size(); x++) {
             cbxmodelos.addItem(modelos.get(x).toString());
+            cbxmodelos3.addItem(modelos.get(x).toString());
         }
     }
 
@@ -107,15 +106,51 @@ public class registroVehiculo extends javax.swing.JFrame {
         marcas = marca.cargarMarcas();
         for (int x = 0; x < marcas.size(); x++) {
             cbxMarcas.addItem(marcas.get(x).toString());
+            cbxMarcas3.addItem(marcas.get(x).toString());
         }
     }
+
     public void cargarEstilo() {
         EstilosDAO esti = new EstilosDAO();
         estilo = esti.cargarEstilos();
         for (int x = 0; x < estilo.size(); x++) {
             cbxEstilos.addItem(estilo.get(x).toString());
+            cbxEstilos3.addItem(estilo.get(x).toString());
         }
 
+    }
+
+    public void borrartable() {
+        int num = tabla.getRowCount();
+        try {
+            if (num > 0) {
+                for (int i = num - 1; i >= 0; i--) {
+                    DefaultTableModel temp2 = (DefaultTableModel) tabla.getModel();
+                    tabla.getModel();
+                    temp2.removeRow(i);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+    }
+
+    public void cargarTabla() {
+        VehiculoDAO dao = new VehiculoDAO();
+        LinkedList<Vehiculo> vehi = dao.cargarTodo1();
+        for (Vehiculo vehiculo : vehi) {
+            DefaultTableModel temp2 = (DefaultTableModel) tabla.getModel();
+            Object nuevo[] = {vehiculo.getPlaca(), vehiculo.getMarca(), vehiculo.getModelo(), vehiculo.getTransmision(),
+                vehiculo.getAño(), vehiculo.getEstilo(), vehiculo.getPrecio(), vehiculo.getEstado()};
+            temp2.addRow(nuevo);
+        }
+    }
+
+    public void cargarPlacas() {
+        VehiculoDAO dao = new VehiculoDAO();
+        LinkedList<Vehiculo> vehi = dao.cargarTodo1();
+        for (Vehiculo vehiculo : vehi) {
+            cbxPlacaSelec.addItem(vehiculo.getPlaca());
+        }
     }
 
     /**
@@ -166,10 +201,12 @@ public class registroVehiculo extends javax.swing.JFrame {
         cbxPlacaSelec = new javax.swing.JComboBox<>();
         jLabel30 = new javax.swing.JLabel();
         btnModificar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         cbxEstilos3 = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabla = new javax.swing.JTable();
+        btnEliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -392,9 +429,11 @@ public class registroVehiculo extends javax.swing.JFrame {
 
         btnModificar.setText("Modificar Vehiculo");
         btnModificar.setEnabled(false);
-
-        btnEliminar.setText("Eliminar vehiculo");
-        btnEliminar.setEnabled(false);
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("Estilo:");
 
@@ -405,58 +444,53 @@ public class registroVehiculo extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbxEstilos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel28)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbxEstado3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jLabel23)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(txtPlaca3, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel25)
-                                        .addComponent(jLabel24))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtAno3)
-                                        .addComponent(txtPrecio3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jLabel27)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbxmodelos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                                    .addComponent(jLabel26)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(cbxMarcas3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jLabel9)
                         .addGap(18, 18, 18)
-                        .addComponent(btnFoto3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cbxEstilos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel30)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbxPlacaSelec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(btnModificar)
+                        .addComponent(jLabel28)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEliminar))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel29)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxTransmis3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(48, Short.MAX_VALUE))
+                        .addComponent(cbxEstado3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                            .addComponent(jLabel23)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(txtPlaca3, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel25)
+                                .addComponent(jLabel24))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtAno3)
+                                .addComponent(txtPrecio3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addComponent(jLabel27)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbxmodelos3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                            .addComponent(jLabel26)
+                            .addGap(18, 18, 18)
+                            .addComponent(cbxMarcas3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addComponent(btnFoto3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel30)
+                .addGap(18, 18, 18)
+                .addComponent(cbxPlacaSelec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(btnModificar))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbxTransmis3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -503,9 +537,7 @@ public class registroVehiculo extends javax.swing.JFrame {
                     .addComponent(jLabel29)
                     .addComponent(cbxTransmis3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(34, 34, 34)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnModificar)
-                    .addComponent(btnEliminar))
+                .addComponent(btnModificar)
                 .addContainerGap(79, Short.MAX_VALUE))
         );
 
@@ -516,28 +548,62 @@ public class registroVehiculo extends javax.swing.JFrame {
             }
         });
 
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8"
+            }
+        ));
+        tabla.setEnabled(false);
+        jScrollPane1.setViewportView(tabla);
+
+        btnEliminar.setText("Eliminar vehiculo");
+        btnEliminar.setEnabled(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(20, 20, 20))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEliminar)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(btnEliminar)))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -574,9 +640,6 @@ public class registroVehiculo extends javax.swing.JFrame {
         if (placa.length() == 7) {
             txtPlaca.setEnabled(false);
         }
-//        if (evt.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
-//            txtPlaca.setText("");
-//        }
     }//GEN-LAST:event_txtPlacaKeyPressed
 
     private void txtAnoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAnoKeyTyped
@@ -592,11 +655,44 @@ public class registroVehiculo extends javax.swing.JFrame {
 
     private void btnFoto3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFoto3ActionPerformed
         // TODO add your handling code here:
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Image", "jpg", "png");
+        fcFoto.setFileFilter(filtro);
+        int option = fcFoto.showOpenDialog(this);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            try {
+                img = new ImageIcon(fcFoto.getSelectedFile().getAbsolutePath());
+                Icon icon = new ImageIcon(img.getImage().getScaledInstance(btnFoto3.getWidth(), btnFoto3.getHeight(), Image.SCALE_DEFAULT));
+                File pathToFile = new File(fcFoto.getSelectedFile().getAbsolutePath());
+                Image image = ImageIO.read(pathToFile.getAbsoluteFile());
+                img2 = image;
+                btnFoto3.setIcon(icon);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Error al cargar la imagen, intente nuevamente.");
+            }
+        }
     }//GEN-LAST:event_btnFoto3ActionPerformed
 
     private void cbxPlacaSelecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxPlacaSelecActionPerformed
         // TODO add your handling code here:
-        
+        String placa = cbxPlacaSelec.getSelectedItem().toString();
+        VehiculoDAO dao = new VehiculoDAO();
+        LinkedList<Vehiculo> vehi = dao.cargarTodo1();
+        for (Vehiculo vehiculo : vehi) {
+            if (placa.equals(vehiculo.getPlaca())) {
+
+                txtPlaca3.setText(vehiculo.getPlaca());
+                txtAno3.setText(String.valueOf(vehiculo.getAño()));
+                txtPrecio3.setText(String.valueOf(vehiculo.getPrecio()));
+                cbxEstilos3.setSelectedItem(vehiculo.getEstilo());
+                cbxEstado3.setSelectedItem(vehiculo.getEstado());
+                cbxMarcas3.setSelectedItem(vehiculo.getMarca());
+                cbxmodelos3.setSelectedItem(vehiculo.getModelo());
+                cbxTransmis3.setSelectedItem(vehiculo.getTransmision());
+                img2 = vehiculo.getFoto();
+                btnFoto3.setIcon(new ImageIcon(vehiculo.getFoto().getScaledInstance(btnFoto3.getWidth(), btnFoto3.getHeight(), Image.SCALE_DEFAULT)));
+            }
+
+        }
     }//GEN-LAST:event_cbxPlacaSelecActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
@@ -612,18 +708,22 @@ public class registroVehiculo extends javax.swing.JFrame {
             vehi.setEstado((String) cbxEstado.getSelectedItem());
             vehi.setEstilo((String) cbxEstilos.getSelectedItem());
             vehi.setTransmision((String) cbxTransmis.getSelectedItem());
-            
+
             VehiculoBO veBo = new VehiculoBO();
             if (veBo.registrarVehi(vehi)) {
                 JOptionPane.showMessageDialog(null, "Vehiculo registrado correctamente");
+                txtAno.setText("");
+                txtPrecio.setText("");
+                txtPlaca.setEnabled(true);
+                txtPlaca.setText("");
             } else {
                 JOptionPane.showMessageDialog(null, "Intente nuevamente");
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Solo numeros en año y precio");
-        }catch (MiError ex) {
+        } catch (MiError ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
-        } 
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioKeyTyped
@@ -662,6 +762,68 @@ public class registroVehiculo extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Ingrese solo Números");
         }
     }//GEN-LAST:event_txtPrecio3KeyTyped
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        int row;
+        row = tabla.getSelectedRow();
+        TableModel tablaModelo = (TableModel) tabla.getModel();
+        if (row != -1) {
+            try {
+                Vehiculo ve = new Vehiculo();
+                ve.setPlaca((String) tablaModelo.getValueAt(row, 0));
+                VehiculoBO rBO = new VehiculoBO();
+                if (rBO.EliminarVehiculo(ve)) {
+                    JOptionPane.showMessageDialog(null, "Vehiculo eliminado correctamente");
+                    DefaultTableModel tempo = (DefaultTableModel) tabla.getModel();
+                    tempo.setRowCount(0);
+                    cargarTabla();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Intente nuevamente");
+                }
+
+            } catch (MiError ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar en la tabla el vehiculo que desea eliminar");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+        Vehiculo vehi = new Vehiculo();
+        try {
+            vehi.setFoto(img2);
+            vehi.setPlaca(txtPlaca3.getText());
+            vehi.setAño(Integer.parseInt(txtAno3.getText()));
+            vehi.setPrecio(Integer.parseInt(txtPrecio3.getText()));
+            vehi.setMarca((String) cbxMarcas3.getSelectedItem());
+            vehi.setModelo((String) cbxmodelos3.getSelectedItem());
+            vehi.setEstado((String) cbxEstado3.getSelectedItem());
+            vehi.setEstilo((String) cbxEstilos3.getSelectedItem());
+            vehi.setTransmision((String) cbxTransmis3.getSelectedItem());
+
+            VehiculoBO veBo = new VehiculoBO();
+            if (veBo.ModificarVehi(vehi, cbxPlacaSelec.getSelectedItem().toString())) {
+                JOptionPane.showMessageDialog(null, "Vehiculo modificado correctamente");
+                txtAno3.setText("");
+                txtPrecio3.setText("");
+                txtPlaca3.setEnabled(true);
+                txtPlaca3.setText("");
+                ImageIcon icono = new ImageIcon(getClass().getResource("/image/camara.png"));
+                btnFoto3.setIcon(icono);
+            } else {
+                JOptionPane.showMessageDialog(null, "Intente nuevamente");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Solo numeros en año y precio");
+        } catch (MiError ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -736,6 +898,8 @@ public class registroVehiculo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabla;
     private javax.swing.JTextField txtAno;
     private javax.swing.JTextField txtAno3;
     private javax.swing.JTextField txtPlaca;

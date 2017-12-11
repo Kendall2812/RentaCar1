@@ -31,7 +31,7 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         this.setTitle("LOGIN");
         this.getContentPane().setBackground(Color.gray);
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);      
     }
 
     /**
@@ -149,8 +149,16 @@ public class Login extends javax.swing.JFrame {
                     Administration_Window ventana = new Administration_Window();
                     ventana.setVisible(true);
                     dispose();
-                }else{
-                    RentaVehiculo ren= new RentaVehiculo();
+                } else {
+
+                    LinkedList<UsuAdm> usuarios = dao.cargarTodo1();
+                    String nombre = "";
+                    for (UsuAdm usuario : usuarios) {
+                        if (usuario.getCedula() == cedula) {
+                            nombre = usuario.getNombre();
+                        }
+                    }
+                    RentaVehiculo ren = new RentaVehiculo(nombre, cedula);
                     ren.setVisible(true);
                     dispose();
                 }

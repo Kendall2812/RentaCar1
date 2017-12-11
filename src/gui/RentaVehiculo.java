@@ -5,22 +5,39 @@
  */
 package gui;
 
+import bo.RentaBO;
+import dao.Conexion;
 import dao.EstilosDAO;
 import dao.MarcaDAO;
 import dao.ModeloDAO;
 import dao.OficinaDAO;
+import entities.Estilo;
+import entities.Marca;
+import entities.MiError;
+import entities.Modelo;
 import entities.Oficina;
+import entities.Renta;
 import static gui.RentaVehiculo.cal;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -31,7 +48,9 @@ public class RentaVehiculo extends javax.swing.JFrame {
     /**
      * Creates new form RentaVehiculo
      */
-    int adicionales;
+    int adicionales, cedula;
+    int dias = -1;
+    String nombre;
     SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
     public static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     public static Date date = new Date();
@@ -41,10 +60,10 @@ public class RentaVehiculo extends javax.swing.JFrame {
     ArrayList modelos = new ArrayList();
     ArrayList marcas = new ArrayList();
     ArrayList estilo = new ArrayList();
-    DefaultTableModel modelo = new DefaultTableModel() {
+    DefaultTableModel modelotab = new DefaultTableModel() {
         @Override
         public Class getColumnClass(int indiceColumna) {
-            Object ima = getValueAt(0, indiceColumna);
+            Object ima = getValueAt(0, 9);
             if (ima == null) {
                 return Object.class;
             } else {
@@ -54,7 +73,10 @@ public class RentaVehiculo extends javax.swing.JFrame {
         }
     };
 
-    public RentaVehiculo() {
+    public RentaVehiculo(String nombreuser, int cedulauser) {
+        ;
+        nombre = nombreuser;
+        cedula = cedulauser;
         initComponents();
         this.getContentPane().setBackground(Color.gray);
         this.setTitle("RENTA VEHICULOS");
@@ -63,28 +85,36 @@ public class RentaVehiculo extends javax.swing.JFrame {
         cargarMarcas();
         cargarModelos();
         cargarEstilo();
+        lblBienvenida.setText("Bienvenido(a) " + nombre);
+//        ImageIcon icono = new ImageIcon(getClass().getResource("/image/usuario.png"));
+//
+//        ImageIcon ponerImagen = new ImageIcon(icono.getImage().getScaledInstance(70, 100, 10));
+//
+//        modelo.addColumn("Imagen", new Object[]{ponerImagen});
+//        modelo.addColumn("Nombre", new Object[]{"jenni"});
+//        tabla.setRowHeight(100);
+//        this.tabla.setModel(modelo);
 
-        ImageIcon icono = new ImageIcon(getClass().getResource("/image/usuario.png"));
-
-        ImageIcon ponerImagen = new ImageIcon(icono.getImage().getScaledInstance(70, 100, 10));
-
-        modelo.addColumn("Imagen", new Object[]{ponerImagen});
-        modelo.addColumn("Nombre", new Object[]{"jenni"});
-        tabla.setRowHeight(100);
-        this.tabla.setModel(modelo);
-        
         cal.add(Calendar.YEAR, +2000);//2000 year after
         Date min = cal.getTime();
         Date max = new Date();//actual date
         jDateRetiro.setSelectableDateRange(max, min);
-        jDateDevol.setSelectableDateRange(max, min);
-        
+        jDateDevolu.setSelectableDateRange(max, min);
+
         txtAño.setVisible(false);
         txtPrecio.setVisible(false);
         cbxEstilo.setVisible(false);
         cbxMarca.setVisible(false);
         cbxModelo.setVisible(false);
         cbxTransmi.setVisible(false);
+
+//        tabla.setModel(new DefaultTableModel(
+//                new Object[][]{},
+//                new String[]{
+//                    "", "", "", "", "", "", "", ""
+//                }
+//        ));
+//        btnRentar.setVisible(true);
     }
 
     public void adicionales() {
@@ -99,9 +129,6 @@ public class RentaVehiculo extends javax.swing.JFrame {
             adi = adi + 3;
         }
         adicionales = adi;
-
-    }
-    public void filtro() {
 
     }
 
@@ -140,10 +167,9 @@ public class RentaVehiculo extends javax.swing.JFrame {
     }
 
     public void obtenerCantDias() {
-        int dias = -1;
-        if (jDateRetiro.getDate() != null && jDateDevol.getDate() != null) {
+        if (jDateRetiro.getDate() != null && jDateDevolu.getDate() != null) {
             Calendar fecha_inicio = jDateRetiro.getCalendar();
-            Calendar fecha_final = jDateDevol.getCalendar();
+            Calendar fecha_final = jDateDevolu.getCalendar();
             while (fecha_inicio.before(fecha_final) || fecha_inicio.equals(fecha_final)) {
                 dias++;
                 fecha_inicio.add(Calendar.DATE, 1);
@@ -151,6 +177,204 @@ public class RentaVehiculo extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Seleccione las fechas", "Calcular Dias", JOptionPane.ERROR_MESSAGE);
         }
+
+    }
+
+    public void llenarTable(ArrayList<String> placa, ArrayList<String> marca, ArrayList<String> modelo, ArrayList<String> estilo,
+            ArrayList<String> trans, ArrayList<String> año, ArrayList<String> precio, ArrayList<String> estado, ArrayList<ImageIcon> imagen) {
+        borrartable();
+        DefaultTableModel temp3 = (DefaultTableModel) tabla.getModel();
+        tabla.getModel();
+        temp3.setNumRows(placa.size());
+        for (int i = 0; i < placa.size(); i++) {
+            tabla.setValueAt(placa.get(i), i, 0);
+            tabla.setValueAt(marca.get(i), i, 1);
+            tabla.setValueAt(modelo.get(i), i, 2);
+            tabla.setValueAt(estilo.get(i), i, 3);
+            tabla.setValueAt(trans.get(i), i, 4);
+            tabla.setValueAt(precio.get(i), i, 5);
+            tabla.setValueAt(año.get(i), i, 6);
+            tabla.setValueAt(estado.get(i), i, 7);
+
+            if (placa.size() >= tabla.getRowCount()) {
+
+                DefaultTableModel temp2 = (DefaultTableModel) tabla.getModel();
+                Object nuevo[] = {temp2.getRowCount()};
+                temp2.addRow(nuevo);
+            }
+        }
+        if (tabla.getRowCount() > placa.size()) {
+
+            try {
+                DefaultTableModel temp2 = (DefaultTableModel) tabla.getModel();
+                tabla.getModel();
+                temp2.removeRow(temp2.getRowCount() - 1);
+            } catch (ArrayIndexOutOfBoundsException e) {
+            }
+        }
+    }
+
+    public void borrartable() {
+        int num = tabla.getRowCount();
+        try {
+            if (num > 0) {
+                for (int i = num - 1; i >= 0; i--) {
+                    DefaultTableModel temp2 = (DefaultTableModel) tabla.getModel();
+                    tabla.getModel();
+                    temp2.removeRow(i);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+    }
+
+    public String sql() {
+
+        String sql = "SELECT vehiculo.placa,marca.nombre_marca as marca,modelo.nombre_modelo as modelo,"
+                + "estilo.nombre_estilo as estilo,"
+                + "vehiculo.transmision,vehiculo.año,\n"
+                + "vehiculo.precio,vehiculo.estado\n"
+                + "from vehiculo inner join marca on vehiculo.marca = marca.nombre_marca\n"
+                + "inner join modelo on vehiculo.modelo = modelo.nombre_modelo\n"
+                + "inner join estilo on vehiculo.estilo = estilo.nombre_estilo\n"
+                + "where vehiculo.estado = 'Disponible'";
+        if (rbtAño.isSelected()) {
+            sql += " AND vehiculo.año ='" + txtAño.getText() + "'";
+        }
+        if (rbtPrecio.isSelected()) {
+            sql += " AND vehiculo.precio ='" + txtPrecio.getText() + "'";
+
+        }
+        if (rbtMarca.isSelected()) {
+
+            sql += " and vehiculo.marca ='" + cbxMarca.getSelectedItem().toString() + "'";
+
+        }
+        if (rbtModelo.isSelected()) {
+
+            sql += " and vehiculo.modelo ='" + cbxModelo.getSelectedItem().toString() + "' ";
+        }
+        if (rbtEstilo.isSelected()) {
+
+            sql += " and vehiculo.estilo ='" + cbxEstilo.getSelectedItem().toString() + "'";
+        }
+        if (rbttransmision.isSelected()) {
+            sql += " AND vehiculo.transmision ='" + cbxTransmi.getSelectedItem() + "'";
+        }
+        return sql;
+    }
+
+    public void buscaVehiculo() {
+        ArrayList<String> placa = null;
+        ArrayList<String> marca = null;
+        ArrayList<String> modelo = null;
+        ArrayList<String> estilo = null;
+        ArrayList<String> trans = null;
+        ArrayList<String> año = null;
+        ArrayList<String> precio = null;
+        ArrayList<String> estado = null;
+        ArrayList<ImageIcon> imagen = null;
+
+        if (!rbtAño.isSelected() & !rbtMarca.isSelected() & !rbtModelo.isSelected() & !rbtEstilo.isSelected() & !rbtPrecio.isSelected() & !rbttransmision.isSelected()) {
+
+            try (Connection con = Conexion.conexion()) {
+
+                placa = new <String>ArrayList();
+                marca = new <String>ArrayList();
+                modelo = new <String>ArrayList();
+                estilo = new <String>ArrayList();
+                trans = new <String>ArrayList();
+                año = new <String>ArrayList();
+                precio = new <String>ArrayList();
+                estado = new <String>ArrayList();
+                imagen = new ArrayList<>();
+
+                String sql = ("SELECT v.foto, v.placa, m.nombre_marca as marca, a.nombre_modelo as modelo,"
+                        + " e.nombre_estilo as estilo , v.transmision, v.año, v.precio, v.estado "
+                        + "FROM vehiculo v, marca m, modelo a, estilo e\n"
+                        + "WHERE m.nombre_marca = v.marca AND a.nombre_modelo = v.modelo AND e.nombre_estilo = v.estilo "
+                        + "ORDER BY placa ASC");
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    placa.add(rs.getString("placa"));
+                    marca.add(rs.getString("marca"));
+                    modelo.add(rs.getString("modelo"));
+                    estilo.add(rs.getString("estilo"));
+                    trans.add(rs.getString("transmision"));
+                    año.add(rs.getString("año"));
+                    precio.add(rs.getString("precio"));
+                    estado.add(rs.getString("estado"));
+//
+//                    InputStream is;
+
+//                    is = rs.getBinaryStream("foto");
+//                    BufferedImage bi = ImageIO.read(is);
+//                    ImageIcon foto;
+//                    foto = new ImageIcon(bi);
+//                    imagen.add(foto);
+                }
+            } catch (Exception e) {
+                System.out.println("Error de conexión" + e);
+            }
+
+            llenarTable(placa, marca, modelo, estilo, trans, año, precio, estado, imagen);
+
+        } else {
+            System.out.println(sql());
+            try (Connection con = Conexion.conexion()) {
+
+                placa = new <String>ArrayList();
+                marca = new <String>ArrayList();
+                modelo = new <String>ArrayList();
+                estilo = new <String>ArrayList();
+                trans = new <String>ArrayList();
+                año = new <String>ArrayList();
+                precio = new <String>ArrayList();
+                estado = new <String>ArrayList();
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql());
+
+                while (rs.next()) {
+                    placa.add(rs.getString("placa"));
+                    marca.add(rs.getString("marca"));
+                    modelo.add(rs.getString("modelo"));
+                    estilo.add(rs.getString("estilo"));
+                    trans.add(rs.getString("transmision"));
+                    año.add(rs.getString("año"));
+                    precio.add(rs.getString("precio"));
+                    estado.add(rs.getString("estado"));
+//                    InputStream is;
+//                    is = rs.getBinaryStream("foto");
+//                    BufferedImage bi = ImageIO.read(is);
+//                    ImageIcon foto;
+//                    foto = new ImageIcon(bi);
+//                    imagen.add(foto);
+                }
+            } catch (Exception e) {
+                System.out.println("Error de conexión" + e);
+            }
+
+            llenarTable(placa, marca, modelo, estilo, trans, año, precio, estado, imagen);
+
+        }
+        if (tabla.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "No se encuentra algún Resultado!");
+        }
+        rbtAño.setSelected(false);
+        rbtPrecio.setSelected(false);
+        rbtMarca.setSelected(false);
+        rbtModelo.setSelected(false);
+        rbtEstilo.setSelected(false);
+        rbttransmision.setSelected(false);
+        txtAño.setText("");
+        txtPrecio.setText("");
+        txtAño.setVisible(false);
+        txtPrecio.setVisible(false);
+        cbxEstilo.setVisible(false);
+        cbxMarca.setVisible(false);
+        cbxModelo.setVisible(false);
+        cbxTransmi.setVisible(false);
 
     }
 
@@ -168,14 +392,14 @@ public class RentaVehiculo extends javax.swing.JFrame {
         CbxOfiRetiro = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jDateDevol = new com.toedter.calendar.JDateChooser();
+        jDateDevolu = new com.toedter.calendar.JDateChooser();
         jDateRetiro = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
         CbxOfiDevol = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        cbxHoraRE = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        cbxHoraDE = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         rbtGps = new javax.swing.JRadioButton();
         rbtBooster = new javax.swing.JRadioButton();
@@ -195,35 +419,53 @@ public class RentaVehiculo extends javax.swing.JFrame {
         cbxModelo = new javax.swing.JComboBox<>();
         cbxTransmi = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
+        lblBienvenida = new javax.swing.JLabel();
+        btnRentar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEtchedBorder(null, java.awt.Color.darkGray), null));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Oficina de retiro:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 31, -1, -1));
+
+        jPanel1.add(CbxOfiRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(103, 28, -1, -1));
 
         jLabel2.setText("Fecha de retiro:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 66, -1, -1));
 
         jLabel3.setText("Fecha de devolución:");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 66, -1, -1));
+        jPanel1.add(jDateDevolu, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 85, 142, 30));
+        jPanel1.add(jDateRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 85, 151, 30));
 
         jLabel4.setText("Oficina de devolucion:");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 31, -1, -1));
 
         CbxOfiDevol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CbxOfiDevolActionPerformed(evt);
             }
         });
+        jPanel1.add(CbxOfiDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(279, 28, -1, -1));
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
+        cbxHoraRE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
+        jPanel1.add(cbxHoraRE, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 126, -1, -1));
 
         jLabel5.setText("Hora de retiro:");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 126, -1, -1));
 
         jLabel6.setText("Hora de devolución :");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 129, -1, -1));
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
+        cbxHoraDE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
+        jPanel1.add(cbxHoraDE, new org.netbeans.lib.awtextra.AbsoluteConstraints(272, 126, -1, -1));
 
         jLabel7.setText("Articulos Adicionales:");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 176, -1, -1));
 
         rbtGps.setText("GPS $9");
         rbtGps.addActionListener(new java.awt.event.ActionListener() {
@@ -231,6 +473,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtGpsActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtGps, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 197, -1, -1));
 
         rbtBooster.setText("Booster $11");
         rbtBooster.addActionListener(new java.awt.event.ActionListener() {
@@ -238,6 +481,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtBoosterActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtBooster, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 220, -1, -1));
 
         rbtSilla.setText("Silla de bebé $3 ");
         rbtSilla.addActionListener(new java.awt.event.ActionListener() {
@@ -245,8 +489,10 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtSillaActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtSilla, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 243, -1, -1));
 
         jLabel8.setText("Filtro de búsqueda:");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 287, -1, -1));
 
         jButton1.setText("Buscar Vehículo");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -254,6 +500,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(121, 478, -1, -1));
 
         rbtAño.setText("Año");
         rbtAño.addActionListener(new java.awt.event.ActionListener() {
@@ -261,6 +508,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtAñoActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtAño, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 311, -1, -1));
 
         rbtPrecio.setText("Precio");
         rbtPrecio.addActionListener(new java.awt.event.ActionListener() {
@@ -268,6 +516,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtPrecioActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 337, -1, -1));
 
         rbtMarca.setText("Marca");
         rbtMarca.addActionListener(new java.awt.event.ActionListener() {
@@ -275,6 +524,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtMarcaActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 363, -1, -1));
 
         rbtModelo.setText("Modelo");
         rbtModelo.addActionListener(new java.awt.event.ActionListener() {
@@ -282,6 +532,14 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtModeloActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtModelo, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 414, -1, -1));
+
+        txtAño.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAñoKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtAño, new org.netbeans.lib.awtextra.AbsoluteConstraints(91, 312, 110, -1));
 
         rbttransmision.setText("Transmisión");
         rbttransmision.addActionListener(new java.awt.event.ActionListener() {
@@ -289,6 +547,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbttransmisionActionPerformed(evt);
             }
         });
+        jPanel1.add(rbttransmision, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 437, -1, -1));
 
         rbtEstilo.setText("Estilo");
         rbtEstilo.addActionListener(new java.awt.event.ActionListener() {
@@ -296,206 +555,97 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 rbtEstiloActionPerformed(evt);
             }
         });
+        jPanel1.add(rbtEstilo, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 389, -1, -1));
+
+        txtPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPrecioKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(91, 338, 110, -1));
+
+        jPanel1.add(cbxMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 364, 102, -1));
+
+        jPanel1.add(cbxEstilo, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 390, 102, -1));
+
+        jPanel1.add(cbxModelo, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 414, 102, -1));
 
         cbxTransmi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Automatica", "Manual" }));
+        jPanel1.add(cbxTransmi, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 438, 102, -1));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDateRetiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(10, 10, 10)
-                        .addComponent(CbxOfiRetiro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+        lblBienvenida.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+
+        btnRentar.setText("Rentar");
+        btnRentar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRentarActionPerformed(evt);
+            }
+        });
+
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9"
+            }
+        ));
+        jScrollPane2.setViewportView(tabla);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 780, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(90, 90, 90))
+                    .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDateDevol, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(CbxOfiDevol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(59, 59, 59))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(rbtGps)
-                            .addComponent(rbtBooster)
-                            .addComponent(rbtSilla)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(rbtModelo)
-                                            .addComponent(rbtEstilo)
-                                            .addComponent(rbtMarca))
-                                        .addGap(28, 28, 28))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(rbttransmision)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbxEstilo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbxModelo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbxTransmi, 0, 102, Short.MAX_VALUE)
-                                    .addComponent(cbxMarca, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rbtAño)
-                                    .addComponent(rbtPrecio))
-                                .addGap(24, 24, 24)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtAño, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(119, 119, 119)
-                        .addComponent(jButton1)))
-                .addGap(0, 188, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnRentar)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2))
+                        .addContainerGap())))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(CbxOfiRetiro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(CbxOfiDevol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(5, 5, 5)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDateDevol, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateRetiro, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6)
-                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(30, 30, 30)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rbtGps)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbtBooster)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rbtSilla)
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbtAño)
-                    .addComponent(txtAño, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbtPrecio)
-                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbtMarca)
-                    .addComponent(cbxMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(rbtEstilo)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cbxEstilo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(rbtModelo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jButton1))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(cbxTransmi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(rbttransmision))))
-                    .addComponent(cbxModelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(46, 46, 46)
+                        .addComponent(btnRentar))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
-        //jDateDevol.getDateEditor().addPropertyChangeListener(new PropertyChangeListener(){
-            //   public void propertyChange(PropertyChangeEvent evt){
-                //    try{
-                    //        verFechaDevolu();
-                    //   }catch(Exception e){
-
-                    //   }
-                //    }
-            //});
-    //jDateRetiro.getDateEditor().addPropertyChangeListener(new PropertyChangeListener(){
-        //   public void propertyChange(PropertyChangeEvent evt){
-            //   try{
-                //       verFechaRetiro();
-                //   }catch(Exception e){
-
-                //   }
-            //   }
-        //});
-
-tabla.setModel(new javax.swing.table.DefaultTableModel(
-    new Object [][] {
-
-    },
-    new String [] {
-        "Title 1", "Title 2"
-    }
-    ));
-
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addGap(28, 28, 28)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-            .addComponent(tabla, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(90, 90, 90))
-    );
-    layout.setVerticalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addGap(36, 36, 36)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(tabla, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-
-    pack();
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void rbttransmisionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbttransmisionActionPerformed
         // TODO add your handling code here:
+        borrartable();
         if (rbttransmision.isSelected()) {
             cbxTransmi.setVisible(true);
         } else {
@@ -505,6 +655,7 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void rbtModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtModeloActionPerformed
         // TODO add your handling code here:
+        borrartable();
         if (rbtModelo.isSelected()) {
             cbxModelo.setVisible(true);
         } else {
@@ -526,9 +677,10 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        obtenerCantDias();
-        adicionales();
-        System.out.println(adicionales);
+        buscaVehiculo();
+//        obtenerCantDias();
+//        adicionales();
+//        System.out.println(adicionales);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void CbxOfiDevolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbxOfiDevolActionPerformed
@@ -537,6 +689,7 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void rbtAñoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtAñoActionPerformed
         // TODO add your handling code here:
+        borrartable();
         if (rbtAño.isSelected()) {
             txtAño.setVisible(true);
         } else {
@@ -546,6 +699,7 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void rbtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtPrecioActionPerformed
         // TODO add your handling code here:
+        borrartable();
         if (rbtPrecio.isSelected()) {
             txtPrecio.setVisible(true);
         } else {
@@ -555,6 +709,7 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void rbtMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtMarcaActionPerformed
         // TODO add your handling code here:
+        borrartable();
         if (rbtMarca.isSelected()) {
             cbxMarca.setVisible(true);
         } else {
@@ -564,12 +719,85 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
 
     private void rbtEstiloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtEstiloActionPerformed
         // TODO add your handling code here:
+        borrartable();
         if (rbtEstilo.isSelected()) {
             cbxEstilo.setVisible(true);
         } else {
             cbxEstilo.setVisible(false);
         }
     }//GEN-LAST:event_rbtEstiloActionPerformed
+
+    private void btnRentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentarActionPerformed
+        // TODO add your handling code here:  
+        adicionales();
+        obtenerCantDias();
+        int row;
+        row = tabla.getSelectedRow();
+        TableModel tablaModelo = (TableModel) tabla.getModel();
+        if (row != -1) {
+            try {
+
+                Renta re = new Renta();
+                re.setNombre(nombre);
+                re.setCedula(cedula);
+                re.setPlaca((String) tablaModelo.getValueAt(row, 0));
+                re.setOfiRetiro((String) CbxOfiRetiro.getSelectedItem());
+                re.setOfiDevolu((String) CbxOfiDevol.getSelectedItem());
+                int precio = Integer.valueOf(tablaModelo.getValueAt(row, 5).toString());
+                if (adicionales != 0) {
+
+                    re.setPrecio((precio + adicionales) * dias);
+                } else {
+                    re.setPrecio((precio * dias));
+                }
+//                SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+//
+//                Date FechaRetiro = formatter.parse(jDateRetiro.getDate().toString());
+//                Date FechaDevolu = formatter.parse(jDateDevolu.getDate().toString());
+
+                re.setFechaRetiro(jDateRetiro.getDate().toString());
+                re.setFechaDevolu(jDateDevolu.getDate().toString());
+                re.setHoraRetiro(cbxHoraRE.getSelectedItem().toString());
+                re.setHoraDevolu(cbxHoraDE.getSelectedItem().toString());
+
+                RentaBO rBO = new RentaBO();
+                if (rBO.registrarRenta(re)) {
+                    JOptionPane.showMessageDialog(null, "Renta registrada correctamente");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Intente nuevamente");
+                }
+
+            } catch (MiError ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar en la tabla el vehiculo que desea");
+        }
+
+
+    }//GEN-LAST:event_btnRentarActionPerformed
+
+    private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioKeyTyped
+        // TODO add your handling code here:
+        char numero = evt.getKeyChar();
+        if (Character.isLetter(numero)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Ingrese solo Números");
+        }
+    }//GEN-LAST:event_txtPrecioKeyTyped
+
+    private void txtAñoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAñoKeyTyped
+        // TODO add your handling code here:
+        char numero = evt.getKeyChar();
+        if (Character.isLetter(numero)) {
+            getToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Ingrese solo Números");
+        }
+    }//GEN-LAST:event_txtAñoKeyTyped
 
     /**
      * @param args the command line arguments
@@ -610,7 +838,7 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RentaVehiculo().setVisible(true);
+                new RentaVehiculo("", 0).setVisible(true);
             }
         });
     }
@@ -618,14 +846,15 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> CbxOfiDevol;
     private javax.swing.JComboBox<String> CbxOfiRetiro;
+    private javax.swing.JButton btnRentar;
     private javax.swing.JComboBox<String> cbxEstilo;
+    private javax.swing.JComboBox<String> cbxHoraDE;
+    private javax.swing.JComboBox<String> cbxHoraRE;
     private javax.swing.JComboBox<String> cbxMarca;
     private javax.swing.JComboBox<String> cbxModelo;
     private javax.swing.JComboBox<String> cbxTransmi;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
-    private com.toedter.calendar.JDateChooser jDateDevol;
+    private com.toedter.calendar.JDateChooser jDateDevolu;
     private com.toedter.calendar.JDateChooser jDateRetiro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -637,6 +866,8 @@ tabla.setModel(new javax.swing.table.DefaultTableModel(
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblBienvenida;
     private javax.swing.JRadioButton rbtAño;
     private javax.swing.JRadioButton rbtBooster;
     private javax.swing.JRadioButton rbtEstilo;
