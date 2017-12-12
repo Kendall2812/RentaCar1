@@ -549,6 +549,7 @@ public class registroVehiculo extends javax.swing.JFrame {
             }
         });
 
+        tabla.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -557,10 +558,9 @@ public class registroVehiculo extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8"
+                "Placa", "Marca", "Modelo", "Transmision", "Año", "Estilo", "Precio", "Estado"
             }
         ));
-        tabla.setEnabled(false);
         jScrollPane1.setViewportView(tabla);
 
         btnEliminar.setText("Eliminar vehiculo");
@@ -584,12 +584,14 @@ public class registroVehiculo extends javax.swing.JFrame {
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnEliminar)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnEliminar)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -782,7 +784,7 @@ public class registroVehiculo extends javax.swing.JFrame {
                     tempo.setRowCount(0);
                     cargarTabla();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Intente nuevamente");
+                    JOptionPane.showMessageDialog(null, "El vehiculo no se puede eliminar porque se encuentra ocupado.");
                 }
 
             } catch (MiError ex) {

@@ -30,8 +30,8 @@ public class VehiculoDAO {
 
     public boolean insertarVehi(Vehiculo v) {
         try (Connection con = Conexion.conexion()) {
-            String sql = "insert into vehiculo(placa,marca,modelo,transmision,año,estilo,precio,foto,estado) "
-                    + "values (?,?,?,?,?,?,?,?,?)";
+            String sql = "insert into vehiculo(placa,marca,modelo,transmision,año,estilo,precio,foto,estado,direccion_foto) "
+                    + "values (?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write((RenderedImage) v.getFoto(), "jpg", os);
@@ -58,7 +58,7 @@ public class VehiculoDAO {
     }
     public boolean EliminarVehi(Vehiculo vehi) throws SQLException {
         try (Connection con = Conexion.conexion()) {
-            String sql = "DELETE FROM vehiculo WHERE placa = ?";
+            String sql = "DELETE FROM vehiculo WHERE placa = ? AND estado = 'Disponible'";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, vehi.getPlaca());
 
