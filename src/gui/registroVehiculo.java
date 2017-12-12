@@ -44,6 +44,7 @@ public class registroVehiculo extends javax.swing.JFrame {
     ArrayList marcas = new ArrayList();
     ArrayList estilo = new ArrayList();
     String tipoAccion = "";
+    String direccionFoto = "";
 
     public registroVehiculo(String tipoaccion) {
         initComponents();
@@ -619,6 +620,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         int option = fcFoto.showOpenDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             try {
+                direccionFoto = String.valueOf(fcFoto.getSelectedFile());
                 img = new ImageIcon(fcFoto.getSelectedFile().getAbsolutePath());
                 Icon icon = new ImageIcon(img.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_DEFAULT));
                 File pathToFile = new File(fcFoto.getSelectedFile().getAbsolutePath());
@@ -708,6 +710,7 @@ public class registroVehiculo extends javax.swing.JFrame {
             vehi.setEstado((String) cbxEstado.getSelectedItem());
             vehi.setEstilo((String) cbxEstilos.getSelectedItem());
             vehi.setTransmision((String) cbxTransmis.getSelectedItem());
+            vehi.setDireccion_foto(direccionFoto);
 
             VehiculoBO veBo = new VehiculoBO();
             if (veBo.registrarVehi(vehi)) {

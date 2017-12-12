@@ -45,6 +45,7 @@ public class VehiculoDAO {
             stmt.setInt(7, v.getPrecio());           
             stmt.setBinaryStream(8, fis);
             stmt.setString(9, v.getEstado());
+            stmt.setString(10, v.getDireccion_foto());
 
             return stmt.executeUpdate() > 0;
 
@@ -70,7 +71,7 @@ public class VehiculoDAO {
         ArrayList estado = new ArrayList();
         Image imgdb = null;
         try (Connection con = Conexion.conexion()) {
-            String sql = "SELECT placa, cedula, nombreusuario, fecharetiro, fechadevo FROM renta WHERE fecharetiro BETWEEN ? and ?";
+            String sql = "SELECT placa, marca, modelo, estilo FROM vehiculo WHERE estado = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, vehi.getEstado());
             ResultSet rs = stmt.executeQuery();
@@ -143,5 +144,21 @@ public class VehiculoDAO {
             throw new MiError("Problemas al cargar vehiculos");
         }
 
+    }
+      public String fotoVehiculo(Vehiculo vehi) {
+        ArrayList estado = new ArrayList();
+        String direccion = "";
+        try (Connection con = Conexion.conexion()) {
+            String sql = "SELECT direccion_foto FROM vehiculo WHERE placa = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, vehi.getPlaca());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                direccion = rs.getString("direccion_foto");
+            }
+        } catch (Exception ex) {
+            throw new MiError("Error al extaer la informacion de los vehiculos." + ex);
+        }
+        return direccion;
     }
 }

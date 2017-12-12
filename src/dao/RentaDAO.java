@@ -22,7 +22,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 //import java.sql.Date;
@@ -60,7 +63,6 @@ public class RentaDAO {
                 fechas.add(rs.getString("nombreusuario"));
                 fechas.add(rs.getString("fecharetiro"));
                 fechas.add(rs.getString("fechadevo"));
-
             }
         } catch (Exception ex) {
             throw new MiError("Error al extaer la informacion de los vehiculos." + ex);
@@ -69,23 +71,39 @@ public class RentaDAO {
     }
 
     public boolean insertarRenta(Renta r) {
+
+        
+        Date fecha1, fecha2; 
+        java.sql.Date fechaIncio = null;
+        java.sql.Date fechaFinal = null;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        
+        try {
+            fecha1 = dateFormat.parse(r.getFechaRetiro());
+            fechaIncio = new java.sql.Date(fecha1.getTime());
+            fecha2 = dateFormat.parse(r.getFechaDevolu());
+            fechaFinal = new java.sql.Date(fecha2.getTime());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error a la hora de comvertir las fechas. " + e);
+        }
+        
         try (Connection con = Conexion.conexion()) {
 
             String sql = "insert into renta (placa, cedula, nombreusuario, ofiretiro, ofidevolu, fecharetiro, horaretiro,"
                     + "fechadevo, horadevolu, preciofinal) "
                     + "values (?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
-            SimpleDateFormat formateador = new SimpleDateFormat("yyyy/MM/dd");
 
             stmt.setString(1, r.getPlaca());
             stmt.setInt(2, r.getCedula());
             stmt.setString(3, r.getNombre());
             stmt.setString(4, r.getOfiRetiro());
             stmt.setString(5, r.getOfiDevolu());
-            stmt.setDate(6, (java.sql.Date) formateador.parse(r.getFechaRetiro()));
-            stmt.setTime(7, Time.valueOf(r.getHoraRetiro()));
-            stmt.setDate(8, (java.sql.Date) formateador.parse(r.getFechaDevolu()));
-            stmt.setTime(9, Time.valueOf(r.getHoraDevolu()));
+            stmt.setDate(6, fechaIncio);
+            stmt.setString(7, r.getHoraRetiro());
+            stmt.setDate(8, fechaFinal);
+            stmt.setString(9, r.getHoraDevolu());
             stmt.setInt(10, r.getPrecio());
 
             return stmt.executeUpdate() > 0;

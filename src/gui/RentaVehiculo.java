@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -48,11 +49,16 @@ public class RentaVehiculo extends javax.swing.JFrame {
     /**
      * Creates new form RentaVehiculo
      */
+    Date hora3;
+    Date hora4;
+    Date fecha1;
+    Date fecha2;
     int adicionales, cedula;
     int dias = -1;
     String nombre;
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat horaFormat = new SimpleDateFormat("hh:mm:ss");
     SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
-    public static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     public static Date date = new Date();
     public static Calendar cal = Calendar.getInstance();
     Date fechaRe;
@@ -453,16 +459,16 @@ public class RentaVehiculo extends javax.swing.JFrame {
         jPanel1.add(CbxOfiDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(279, 28, -1, -1));
 
         cbxHoraRE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
-        jPanel1.add(cbxHoraRE, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 126, -1, -1));
+        jPanel1.add(cbxHoraRE, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 80, -1));
 
         jLabel5.setText("Hora de retiro:");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 126, -1, -1));
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, -1, -1));
 
         jLabel6.setText("Hora de devolución :");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 129, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 130, -1, -1));
 
         cbxHoraDE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
-        jPanel1.add(cbxHoraDE, new org.netbeans.lib.awtextra.AbsoluteConstraints(272, 126, -1, -1));
+        jPanel1.add(cbxHoraDE, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, -1, -1));
 
         jLabel7.setText("Articulos Adicionales:");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 176, -1, -1));
@@ -605,11 +611,12 @@ public class RentaVehiculo extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 780, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 773, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(90, 90, 90))
                     .addGroup(layout.createSequentialGroup()
@@ -728,7 +735,8 @@ public class RentaVehiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_rbtEstiloActionPerformed
 
     private void btnRentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentarActionPerformed
-        // TODO add your handling code here:  
+        // TODO add your handling code here: 
+        String hora5, hora6;
         adicionales();
         obtenerCantDias();
         int row;
@@ -736,8 +744,14 @@ public class RentaVehiculo extends javax.swing.JFrame {
         TableModel tablaModelo = (TableModel) tabla.getModel();
         if (row != -1) {
             try {
-
+                
                 Renta re = new Renta();
+                
+                fecha1 = jDateRetiro.getDate();
+                fecha2 = jDateDevolu.getDate();
+                re.setFechaRetiro(dateFormat.format(fecha1));
+                re.setFechaDevolu(dateFormat.format(fecha2));
+                
                 re.setNombre(nombre);
                 re.setCedula(cedula);
                 re.setPlaca((String) tablaModelo.getValueAt(row, 0));
@@ -750,13 +764,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 } else {
                     re.setPrecio((precio * dias));
                 }
-//                SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-//
-//                Date FechaRetiro = formatter.parse(jDateRetiro.getDate().toString());
-//                Date FechaDevolu = formatter.parse(jDateDevolu.getDate().toString());
 
-                re.setFechaRetiro(jDateRetiro.getDate().toString());
-                re.setFechaDevolu(jDateDevolu.getDate().toString());
                 re.setHoraRetiro(cbxHoraRE.getSelectedItem().toString());
                 re.setHoraDevolu(cbxHoraDE.getSelectedItem().toString());
 

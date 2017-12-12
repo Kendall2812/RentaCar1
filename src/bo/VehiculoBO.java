@@ -45,6 +45,9 @@ public class VehiculoBO {
         if (vehi.getEstilo().isEmpty()) {
             throw new MiError("Requiere el estilo");
         }
+        if (vehi.getDireccion_foto().isEmpty()) {
+            throw new MiError("Requiere la foto");
+        }
         VehiculoDAO veDao = new VehiculoDAO();
         return veDao.insertarVehi(vehi);
 
@@ -96,4 +99,12 @@ public class VehiculoBO {
         return veDao.modiVehi(vehi, plaOri);
 
     }
+      public String imagenes3(Vehiculo vehi){
+        if (vehi.getPlaca().isEmpty()) {
+            throw new MiError("Requiere foto");
+        }
+        
+        VehiculoDAO veDao = new VehiculoDAO();
+        return veDao.fotoVehiculo(vehi); 
+      }
 }
