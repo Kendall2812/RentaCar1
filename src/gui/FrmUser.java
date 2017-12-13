@@ -32,6 +32,7 @@ public class FrmUser extends javax.swing.JFrame {
      */
     ImageIcon img = new ImageIcon();
     private Image img2;
+    String direccion_foto = "";
 
     public FrmUser() {
         initComponents();
@@ -209,6 +210,7 @@ public class FrmUser extends javax.swing.JFrame {
             u.setNombre(txtNombre.getText());
             u.setDireccion(txtDireccion.getText());
             u.setFoto(img2);
+            u.setDireccion_foto(direccion_foto);
             Utilidades uti = new Utilidades();
             String contra = uti.Encriptar(txtContra.getText());
             u.setContraseña(contra);
@@ -250,6 +252,7 @@ public class FrmUser extends javax.swing.JFrame {
         int option = fcFoto.showOpenDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             try {
+                direccion_foto = String.valueOf(fcFoto.getSelectedFile());
                 img = new ImageIcon(fcFoto.getSelectedFile().getAbsolutePath());
                 Icon icon = new ImageIcon(img.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_DEFAULT));
                 File pathToFile = new File(fcFoto.getSelectedFile().getAbsolutePath());

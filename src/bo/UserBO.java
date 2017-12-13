@@ -27,7 +27,10 @@ public class UserBO {
         }
         if (u.getFoto() == null) {
             throw new MiError("Foto requerida");
-        }      
+        }
+        if (u.getDireccion_foto() == null) {
+            throw new MiError("Foto requerida");
+        }
         UsuAdmDAO idao = new UsuAdmDAO();
         return idao.insertar(u);
     }

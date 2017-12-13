@@ -20,8 +20,9 @@ public class UsuAdm {
     private String contraseña;
     private boolean tipo;
     private Image foto;
+    private String direccion_foto;
 
-    public UsuAdm(int cedula, String nombre, int telefono, String direccion, String contraseña, boolean tipo, Image foto) {
+    public UsuAdm(int cedula, String nombre, int telefono, String direccion, String contraseña, boolean tipo, Image foto,String direccion_foto) {
 
         this.cedula = cedula;
         this.telefono = telefono;
@@ -30,6 +31,7 @@ public class UsuAdm {
         this.contraseña = contraseña;
         this.tipo = tipo;
         this.foto = foto;
+        this.direccion_foto = direccion_foto;
 
     }
 
@@ -93,8 +95,17 @@ public class UsuAdm {
         this.foto = foto;
     }
 
+    public String getDireccion_foto() {
+        return direccion_foto;
+    }
+
+    public void setDireccion_foto(String direccion_foto) {
+        this.direccion_foto = direccion_foto;
+    }
+
     @Override
     public String toString() {
-        return "users{" + "cedula=" + cedula + ", nombre=" + nombre + ", telefono=" + telefono + ", direccion=" + direccion + ", contraseña=" + contraseña + ", tipo=" + tipo + ", foto=" + foto +'}';
+        return "users{" + "cedula=" + cedula + ", nombre=" + nombre + ", telefono=" + telefono + ", direccion=" + direccion + ", contraseña=" + contraseña + ", tipo=" + tipo + ", foto=" + foto + ", direccion_foto=" + direccion_foto + '}';
     }
+
 }

@@ -121,7 +121,7 @@ public class VehiculoDAO {
       public boolean modiVehi(Vehiculo v, String placa) {
         try (Connection con = Conexion.conexion()) {
             String sql = "update vehiculo SET placa = ?, marca = ?, modelo = ?, transmision = ?, año = ?, estilo = ?,"
-                    + " precio = ?, foto = ?, estado = ? where placa = ?";
+                    + " precio = ?, foto = ?, estado = ?, direccion_foto = ? where placa = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write((RenderedImage) v.getFoto(), "jpg", os);
@@ -135,7 +135,8 @@ public class VehiculoDAO {
             stmt.setInt(7, v.getPrecio());           
             stmt.setBinaryStream(8, fis);
             stmt.setString(9, v.getEstado());
-            stmt.setString(10, placa);
+            stmt.setString(10, v.getDireccion_foto());
+            stmt.setString(11, placa);
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException s) {

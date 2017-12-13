@@ -28,8 +28,8 @@ public class UsuAdmDAO {
 
     public boolean insertar(UsuAdm u) {
         try (Connection con = Conexion.conexion()) {
-            String sql = "insert into users(cedula, nombre, telefono,direccion,contraseña,tipo,foto) "
-                    + "values (?,?,?,?,?,?,?)";
+            String sql = "insert into users(cedula, nombre, telefono,direccion,contraseña,tipo,foto,direccion_foto) "
+                    + "values (?,?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write((RenderedImage) u.getFoto(), "jpg", os);
@@ -41,6 +41,7 @@ public class UsuAdmDAO {
             stmt.setString(5, u.getContraseña());
             stmt.setBoolean(6, u.isTipo());
             stmt.setBinaryStream(7, fis);
+            stmt.setString(8, u.getDireccion_foto());
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException s) {

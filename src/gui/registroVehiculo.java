@@ -86,6 +86,7 @@ public class registroVehiculo extends javax.swing.JFrame {
             cbxEstilos3.setEnabled(true);
 
         } else if (tipoAccion.equals("eliminar")) {
+            tabla.setEnabled(true);
             borrartable();
             cargarTabla();
             cargarPlacas();
@@ -561,6 +562,7 @@ public class registroVehiculo extends javax.swing.JFrame {
                 "Placa", "Marca", "Modelo", "Transmision", "Año", "Estilo", "Precio", "Estado"
             }
         ));
+        tabla.setEnabled(false);
         jScrollPane1.setViewportView(tabla);
 
         btnEliminar.setText("Eliminar vehiculo");
@@ -664,6 +666,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         int option = fcFoto.showOpenDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
             try {
+                direccionFoto = String.valueOf(fcFoto.getSelectedFile());
                 img = new ImageIcon(fcFoto.getSelectedFile().getAbsolutePath());
                 Icon icon = new ImageIcon(img.getImage().getScaledInstance(btnFoto3.getWidth(), btnFoto3.getHeight(), Image.SCALE_DEFAULT));
                 File pathToFile = new File(fcFoto.getSelectedFile().getAbsolutePath());
@@ -810,6 +813,7 @@ public class registroVehiculo extends javax.swing.JFrame {
             vehi.setEstado((String) cbxEstado3.getSelectedItem());
             vehi.setEstilo((String) cbxEstilos3.getSelectedItem());
             vehi.setTransmision((String) cbxTransmis3.getSelectedItem());
+            vehi.setDireccion_foto(direccionFoto);
 
             VehiculoBO veBo = new VehiculoBO();
             if (veBo.ModificarVehi(vehi, cbxPlacaSelec.getSelectedItem().toString())) {
