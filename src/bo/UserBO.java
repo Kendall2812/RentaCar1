@@ -8,6 +8,7 @@ package bo;
 import dao.UsuAdmDAO;
 import entities.MiError;
 import entities.UsuAdm;
+import java.util.ArrayList;
 
 /**
  *

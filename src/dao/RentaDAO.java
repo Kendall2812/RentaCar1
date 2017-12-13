@@ -71,8 +71,6 @@ public class RentaDAO {
     }
 
     public boolean insertarRenta(Renta r) {
-
-        
         Date fecha1, fecha2; 
         java.sql.Date fechaIncio = null;
         java.sql.Date fechaFinal = null;
@@ -113,6 +111,41 @@ public class RentaDAO {
         } catch (Exception ex) {
             throw new MiError("Problemas al cargar renta");
         }
-
+    }
+    
+    public ArrayList reporteVehiculoAsignadoUsuario(UsuAdm u){
+        ArrayList informacionUsuarioVehiculo = new ArrayList();
+        try (Connection con = Conexion.conexion()) {
+            String sql = "SELECT vehiculo.placa as placa, vehiculo.marca as marca, vehiculo.modelo as modelo, vehiculo.transmision as transmision, vehiculo.año as año, vehiculo.estilo as estilo, vehiculo.precio as precio, vehiculo.direccion_foto as direccion_foto,"
+                    + "users.cedula as cedula, users.nombre as nombre, users.telefono as telefono, users.direccion as direccion, users.direccion_foto_user as direccion_foto_user\n"
+                    + "FROM vehiculo\n"
+                    + "INNER JOIN renta\n"
+                    + "ON renta.placa = vehiculo.placa\n"
+                    + "INNER JOIN users\n"
+                    + "ON renta.cedula = users.cedula\n"
+                    + "WHERE renta.cedula = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, u.getCedula());//cedula usuario
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                informacionUsuarioVehiculo.add(rs.getString("cedula"));
+                informacionUsuarioVehiculo.add(rs.getString("nombre"));
+                informacionUsuarioVehiculo.add(rs.getString("telefono"));
+                informacionUsuarioVehiculo.add(rs.getString("direccion"));
+                informacionUsuarioVehiculo.add(rs.getString("direccion_foto_user"));
+                
+                informacionUsuarioVehiculo.add(rs.getString("placa"));
+                informacionUsuarioVehiculo.add(rs.getString("marca"));
+                informacionUsuarioVehiculo.add(rs.getString("modelo"));
+                informacionUsuarioVehiculo.add(rs.getString("transmision"));
+                informacionUsuarioVehiculo.add(rs.getString("año"));
+                informacionUsuarioVehiculo.add(rs.getString("estilo"));
+                informacionUsuarioVehiculo.add(rs.getString("precio"));
+                informacionUsuarioVehiculo.add(rs.getString("direccion_foto"));
+            }
+        } catch (Exception s) {
+            throw new MiError("Error al extaer la información de los Vehiculo o del Usuario." + s);
+        }
+        return informacionUsuarioVehiculo;
     }
 }

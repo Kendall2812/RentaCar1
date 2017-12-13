@@ -5,7 +5,7 @@
  */
 package gui;
 
-import bo.VehiculoBO;
+import bo.RentaBO;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -15,12 +15,13 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import entities.Vehiculo;
+import entities.UsuAdm;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -34,7 +35,9 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
     /**
      * Creates new form reporteUsuacioaAsociadoVehiculo
      */
-    String imagen2 = null;
+    String Foto = null;
+    String Foto2 = null;
+    ArrayList datosUsuarioVehiculo = new ArrayList();
     public reporteUsuacioaAsociadoVehiculo() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -43,11 +46,12 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
     public void reporteAsociacion() throws FileNotFoundException {
         String nombre = "Reporte Vehiculo asociado a Usuario.";
         try {
-            Vehiculo vehi = new Vehiculo();
-            vehi.setPlaca("JRM-026");
-            VehiculoBO resultado = new VehiculoBO();
-            imagen2 = resultado.imagenes3(vehi);
-            if (imagen2.isEmpty() == false) {
+            UsuAdm u = new UsuAdm();
+            u.setCedula(Integer.parseInt(txtCedula.getText()));
+            RentaBO resultado = new RentaBO();
+            datosUsuarioVehiculo = resultado.reporteUsuarioVehiculo(u);
+            
+            if (datosUsuarioVehiculo.isEmpty() == false) {
 
                 FileOutputStream archivo = new FileOutputStream(nombre + ".pdf");
                 Document documento = new Document();
@@ -55,18 +59,49 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
                 documento.open();
                 
                 Paragraph texto = new Paragraph();
-                texto.add("Vehiculos alquilados por Rango de Fecha");
+                texto.add("Informacion del vehiculo asociado al usuario.");
                 texto.setAlignment(Element.ALIGN_MIDDLE);
-                
-                Image imagen = Image.getInstance(imagen2);
-                imagen.scaleAbsolute(150, 100);
-                imagen.setAlignment(Element.ALIGN_LEFT);
-                imagen.setBorder(Image.BOX);
-                imagen.setBorderWidth(4);
-                imagen.setBorderColor(BaseColor.RED);
-                documento.add(imagen);
                 documento.add(texto);
+                
+                for(int x = 0; x < datosUsuarioVehiculo.size(); x++){
+                    documento.add(new Paragraph("\n"));
+                    documento.add(new Paragraph("Informacion Usuario." , FontFactory.getFont("Arial", 12)));
+                    documento.add(new Paragraph("\n"));
+                    documento.add(new Paragraph("Cedula: " + datosUsuarioVehiculo.get(x), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Nombre: " + datosUsuarioVehiculo.get(x + 1), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Telefono: " + datosUsuarioVehiculo.get(x + 2), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Dirección: " + datosUsuarioVehiculo.get(x + 3), FontFactory.getFont("Arial", 10)));
+                    Foto = datosUsuarioVehiculo.get(x + 4).toString();//direccio Foto usuario
+                    Image imagen = Image.getInstance(Foto);//agregar direccion
+                    imagen.scaleAbsolute(150, 100);
+                    imagen.setAlignment(Element.ALIGN_LEFT);
+                    imagen.setBorder(Image.BOX);
+                    imagen.setBorderWidth(4);
+                    imagen.setBorderColor(BaseColor.RED);
+                    documento.add(imagen);
+                    documento.add(new Paragraph("\n"));
+                    documento.add(new Paragraph("Informacion Vehiculo." , FontFactory.getFont("Arial", 12)));
+                    documento.add(new Paragraph("\n"));
+                    documento.add(new Paragraph("Placa: " + datosUsuarioVehiculo.get(x+5), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Marca: " + datosUsuarioVehiculo.get(x+6), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Modelo: " + datosUsuarioVehiculo.get(x+7), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Transmision: " + datosUsuarioVehiculo.get(x+8), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Año: " + datosUsuarioVehiculo.get(x+9), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Estilo: " + datosUsuarioVehiculo.get(x+10), FontFactory.getFont("Arial", 10)));
+                    documento.add(new Paragraph("Precio: $"+ datosUsuarioVehiculo.get(x+11), FontFactory.getFont("Arial", 10)));
+                    Foto2 = datosUsuarioVehiculo.get(x + 12).toString();//direccion foto vehiculo
+                    Image imagen2 = Image.getInstance(Foto2);//agregar direccion
+                    imagen2.scaleAbsolute(150, 100);
+                    imagen2.setAlignment(Element.ALIGN_LEFT);
+                    imagen2.setBorder(Image.BOX);
+                    imagen2.setBorderWidth(4);
+                    imagen2.setBorderColor(BaseColor.RED);
+                    documento.add(imagen2);
+                    
+                    x = x + 12;
+                } 
                 documento.close();
+                
                 //Esta parte abre el documento
                 try {
                     File path = new File(nombre + ".pdf");
@@ -92,9 +127,15 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
     private void initComponents() {
 
         btnGenerarPDF = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        txtCedula = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        btnGenerarPDF.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnGenerarPDF.setText("Generar PDF");
         btnGenerarPDF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,21 +143,53 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setText("Digite numero de cedula");
+
+        txtCedula.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+
+        jButton1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jButton1.setText("Regresar");
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Se imprimira la informacion del Usuario y \nla informacion del Vehiculo que \nel usuario alquilo.");
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnGenerarPDF)
-                .addContainerGap(455, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtCedula, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnGenerarPDF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addComponent(btnGenerarPDF)
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGap(65, 65, 65))
         );
 
         pack();
@@ -167,5 +240,10 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenerarPDF;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField txtCedula;
     // End of variables declaration//GEN-END:variables
 }

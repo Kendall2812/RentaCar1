@@ -66,4 +66,12 @@ public class RentaBO {
         RentaDAO idao = new RentaDAO();
         return idao.insertarRenta(u);
     }
+
+    public ArrayList reporteUsuarioVehiculo(UsuAdm u) {
+        if (u.getCedula() == 0) {
+            throw new MiError("Nombre requerido");
+        }
+        RentaDAO idao = new RentaDAO();
+        return idao.reporteVehiculoAsignadoUsuario(u);
+    }
 }
