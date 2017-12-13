@@ -348,7 +348,9 @@ public class Administration_Window extends javax.swing.JFrame {
     }//GEN-LAST:event_VehiculoRegistradoAcordeEstadoActionPerformed
 
     private void VehiculoAsociadoAUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VehiculoAsociadoAUsuarioActionPerformed
-        // TODO add your handling code here:
+        reporteUsuacioaAsociadoVehiculo datos = new reporteUsuacioaAsociadoVehiculo();
+        datos.setVisible(true);
+        dispose();
     }//GEN-LAST:event_VehiculoAsociadoAUsuarioActionPerformed
 
     private void btnIrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIrActionPerformed
