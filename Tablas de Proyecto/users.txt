@@ -1,0 +1,36 @@
+-- Table: public.users
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users
+(
+    id smallint DEFAULT nextval('users_id_seq'::regclass),
+    cedula numeric NOT NULL,
+    nombre text COLLATE pg_catalog."default",
+    telefono numeric,
+    direccion text COLLATE pg_catalog."default",
+    "contraseña" text COLLATE pg_catalog."default",
+    tipo boolean,
+    foto bytea,
+    direccion_foto_user character varying COLLATE pg_catalog."default",
+    CONSTRAINT users_pkey PRIMARY KEY (cedula)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.users
+    OWNER to postgres;
+
+
+
+
+--- Esto es para lo del administrador
+
+insert into users(cedula,nombre,telefono,direccion,contraseña,tipo) values (12345,'admin',87488947,'90 mts norte','O+8JeCdhKXU=',true) 
+
+--- La contraseña cuando se la solicita en pantalla es 2812
+
+
+

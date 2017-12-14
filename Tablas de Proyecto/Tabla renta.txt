@@ -1,0 +1,24 @@
+-- Table: public.renta
+
+-- DROP TABLE public.renta;
+
+CREATE TABLE public.renta
+(
+    placa text COLLATE pg_catalog."default",
+    cedula numeric(9,0),
+    nombreusuario character varying(20) COLLATE pg_catalog."default",
+    ofiretiro character varying(30) COLLATE pg_catalog."default",
+    ofidevolu character varying(30) COLLATE pg_catalog."default",
+    fecharetiro date,
+    horaretiro character varying COLLATE pg_catalog."default",
+    fechadevo date,
+    horadevolu character varying COLLATE pg_catalog."default",
+    preciofinal numeric
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.renta
+    OWNER to postgres;

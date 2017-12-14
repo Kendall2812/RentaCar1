@@ -1,0 +1,17 @@
+-- Table: public.oficina
+
+-- DROP TABLE public.oficina;
+
+CREATE TABLE public.oficina
+(
+    id_oficina integer NOT NULL DEFAULT nextval('oficina_id_oficina_seq'::regclass),
+    nombre_oficina character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT oficina_pkey PRIMARY KEY (nombre_oficina)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.oficina
+    OWNER to postgres;

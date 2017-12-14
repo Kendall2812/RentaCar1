@@ -1,0 +1,26 @@
+-- Table: public.vehiculo
+
+-- DROP TABLE public.vehiculo;
+
+CREATE TABLE public.vehiculo
+(
+    placa text COLLATE pg_catalog."default" NOT NULL,
+    marca text COLLATE pg_catalog."default",
+    modelo text COLLATE pg_catalog."default",
+    transmision text COLLATE pg_catalog."default",
+    "año" numeric,
+    estilo text COLLATE pg_catalog."default",
+    precio numeric,
+    foto bytea,
+    estado text COLLATE pg_catalog."default",
+    direccion_foto character varying COLLATE pg_catalog."default",
+    id integer NOT NULL DEFAULT nextval('vehiculo_id_seq'::regclass),
+    CONSTRAINT vehiculo_pkey PRIMARY KEY (placa)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.vehiculo
+    OWNER to postgres;

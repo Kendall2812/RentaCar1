@@ -1,0 +1,17 @@
+-- Table: public.modelo
+
+-- DROP TABLE public.modelo;
+
+CREATE TABLE public.modelo
+(
+    id_modelo integer NOT NULL DEFAULT nextval('modelo_id_modelo_seq'::regclass),
+    nombre_modelo character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT modelo_pkey PRIMARY KEY (nombre_modelo)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.modelo
+    OWNER to postgres;

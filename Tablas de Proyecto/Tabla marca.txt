@@ -1,0 +1,17 @@
+-- Table: public.marca
+
+-- DROP TABLE public.marca;
+
+CREATE TABLE public.marca
+(
+    id_marca integer DEFAULT nextval('marca_id_marca_seq'::regclass),
+    nombre_marca character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT marca_pkey PRIMARY KEY (nombre_marca)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.marca
+    OWNER to postgres;

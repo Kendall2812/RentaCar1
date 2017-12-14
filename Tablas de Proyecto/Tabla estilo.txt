@@ -1,0 +1,17 @@
+-- Table: public.estilo
+
+-- DROP TABLE public.estilo;
+
+CREATE TABLE public.estilo
+(
+    id_estilo integer NOT NULL DEFAULT nextval('estilo_id_estilo_seq'::regclass),
+    nombre_estilo character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT estilo_pkey PRIMARY KEY (nombre_estilo)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.estilo
+    OWNER to postgres;
