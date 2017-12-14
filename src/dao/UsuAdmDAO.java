@@ -26,7 +26,7 @@ import entities.UsuAdm;
  */
 public class UsuAdmDAO {
 
-    public boolean insertar(UsuAdm u) {
+    public boolean insertar(UsuAdm u) {//this method the than does is receive the information from the graphical interface for then save it in the database.
         try (Connection con = Conexion.conexion()) {
             String sql = "insert into users(cedula, nombre, telefono,direccion,contraseña,tipo,foto,direccion_foto_user) "
                     + "values (?,?,?,?,?,?,?,?)";
@@ -52,7 +52,7 @@ public class UsuAdmDAO {
 
     }
 
-    public LinkedList<UsuAdm> cargarTodo1() {
+    public LinkedList<UsuAdm> cargarTodo1() {//this method the than does is select the information of the users in the database for then show it in the graphic interface
         LinkedList<UsuAdm> usuarios = new LinkedList<>();
         try (Connection con = Conexion.conexion()) {
             String sql = "select * from users";
@@ -67,7 +67,7 @@ public class UsuAdmDAO {
         return usuarios;
     }
 
-    public UsuAdm filtro(int cedu, String contras) throws SQLException {
+    public UsuAdm filtro(int cedu, String contras) throws SQLException {//this method the than does is check if the password and the admin are correct so that later i access to the program.
         UsuAdm a = new UsuAdm();
         try (Connection con = Conexion.conexion()) {
             String sql = "select * from users where cedula = ? and contraseña = ?";
@@ -86,7 +86,7 @@ public class UsuAdmDAO {
         return a;
     }
 
-    public UsuAdm cargarUsuario(ResultSet rs) throws SQLException, IOException {
+    public UsuAdm cargarUsuario(ResultSet rs) throws SQLException, IOException {//This method is to extract all the information of the user for then be used in the method of cargarTodo1
         UsuAdm u = new UsuAdm();
         u.setCedula(rs.getInt("cedula"));
         u.setNombre(rs.getString("nombre"));

@@ -101,12 +101,4 @@ public class VehiculoBO {
         return veDao.modiVehi(vehi, plaOri);
 
     }
-      public String imagenes3(Vehiculo vehi){
-        if (vehi.getPlaca().isEmpty()) {
-            throw new MiError("Requiere foto");
-        }
-        
-        VehiculoDAO veDao = new VehiculoDAO();
-        return veDao.fotoVehiculo(vehi); 
-      }
 }

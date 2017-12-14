@@ -29,7 +29,7 @@ import javax.imageio.ImageIO;
 public class VehiculoDAO {
 
     public boolean insertarVehi(Vehiculo v) {
-        try (Connection con = Conexion.conexion()) {
+        try (Connection con = Conexion.conexion()) {//It is the method in charge of registering the vehicles in the database
             
             String sql = "insert into vehiculo(placa,marca,modelo,transmision,año,estilo,precio,foto,estado,direccion_foto) "
                     + "values (?,?,?,?,?,?,?,?,?,?)";
@@ -56,7 +56,7 @@ public class VehiculoDAO {
         }
 
     }
-    public boolean EliminarVehi(Vehiculo vehi) throws SQLException {
+    public boolean EliminarVehi(Vehiculo vehi) throws SQLException {//It is the method in charge of eliminating the vehicle according to the plate that is passing from the graphic interface
         try (Connection con = Conexion.conexion()) {
             String sql = "DELETE FROM vehiculo WHERE placa = ? AND estado = 'Disponible'";
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -67,7 +67,7 @@ public class VehiculoDAO {
             throw new MiError("Falla al eliminar el vehiculo.");
         }
     }
-    public ArrayList cargarVehiculoEstado(Vehiculo vehi) {
+    public ArrayList cargarVehiculoEstado(Vehiculo vehi) {//It is the method in charge of consulting in the database which are the vehicles that are in the state that are asked from the graphical interface so that they are then shown on the screen
         ArrayList estado = new ArrayList();
         Image imgdb = null;
         try (Connection con = Conexion.conexion()) {
@@ -86,7 +86,7 @@ public class VehiculoDAO {
         }
         return estado;
     }
-    public LinkedList<Vehiculo> cargarTodo1() {
+    public LinkedList<Vehiculo> cargarTodo1() {//this method the than does is select the information of the vehicles in the database for then show it in the graphic interface
         LinkedList<Vehiculo> vehiculo = new LinkedList<>();
         try (Connection con = Conexion.conexion()) {
             String sql = "select * from vehiculo";
@@ -100,7 +100,7 @@ public class VehiculoDAO {
         }
         return vehiculo;
     }
-     public Vehiculo cargarVehiculo(ResultSet rs) throws SQLException, IOException {
+     public Vehiculo cargarVehiculo(ResultSet rs) throws SQLException, IOException {//This method is to extract all the information of the vehicles for then be used in the method of cargarTodo1
         Vehiculo u = new Vehiculo();
         u.setPlaca(rs.getString("placa"));
         u.setEstado(rs.getString("estado"));
@@ -145,21 +145,5 @@ public class VehiculoDAO {
             throw new MiError("Problemas al cargar vehiculos");
         }
 
-    }
-      public String fotoVehiculo(Vehiculo vehi) {
-        ArrayList estado = new ArrayList();
-        String direccion = "";
-        try (Connection con = Conexion.conexion()) {
-            String sql = "SELECT direccion_foto FROM vehiculo WHERE placa = ?";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, vehi.getPlaca());
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                direccion = rs.getString("direccion_foto");
-            }
-        } catch (Exception ex) {
-            throw new MiError("Error al extaer la informacion de los vehiculos." + ex);
-        }
-        return direccion;
     }
 }
