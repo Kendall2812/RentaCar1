@@ -402,7 +402,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
         jLabel1.setText("Oficina de retiro:");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 31, -1, -1));
 
-        jPanel1.add(CbxOfiRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(103, 28, -1, -1));
+        jPanel1.add(CbxOfiRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, -1, 20));
 
         jLabel2.setText("Fecha de retiro:");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 66, -1, -1));
@@ -413,26 +413,26 @@ public class RentaVehiculo extends javax.swing.JFrame {
         jPanel1.add(jDateRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 85, 151, 30));
 
         jLabel4.setText("Oficina de devolucion:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, -1, -1));
 
         CbxOfiDevol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CbxOfiDevolActionPerformed(evt);
             }
         });
-        jPanel1.add(CbxOfiDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, -1, -1));
+        jPanel1.add(CbxOfiDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 30, -1, 20));
 
         cbxHoraRE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
-        jPanel1.add(cbxHoraRE, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 80, -1));
+        jPanel1.add(cbxHoraRE, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 80, -1));
 
         jLabel5.setText("Hora de retiro:");
         jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, -1, -1));
 
         jLabel6.setText("Hora de devolución :");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 130, -1, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 130, -1, -1));
 
         cbxHoraDE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
-        jPanel1.add(cbxHoraDE, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 130, -1, -1));
+        jPanel1.add(cbxHoraDE, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 130, -1, -1));
 
         jLabel7.setText("Articulos Adicionales:");
         jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 176, -1, -1));
@@ -541,7 +541,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
         jPanel1.add(cbxModelo, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 414, 102, -1));
 
         cbxTransmi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Automatica", "Manual" }));
-        jPanel1.add(cbxTransmi, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 438, 102, -1));
+        jPanel1.add(cbxTransmi, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 440, 102, -1));
 
         lblBienvenida.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
 
@@ -583,25 +583,21 @@ public class RentaVehiculo extends javax.swing.JFrame {
                         .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnRentar)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 855, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(90, 90, 90))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton2)
-                                .addContainerGap())))))
+                                .addContainerGap())
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 901, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(btnRentar))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
