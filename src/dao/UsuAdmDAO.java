@@ -28,7 +28,7 @@ public class UsuAdmDAO {
 
     public boolean insertar(UsuAdm u) {
         try (Connection con = Conexion.conexion()) {
-            String sql = "insert into users(cedula, nombre, telefono,direccion,contraseña,tipo,foto,direccion_foto) "
+            String sql = "insert into users(cedula, nombre, telefono,direccion,contraseña,tipo,foto,direccion_foto_user) "
                     + "values (?,?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
