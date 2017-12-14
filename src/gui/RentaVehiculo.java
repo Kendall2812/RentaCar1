@@ -11,31 +11,26 @@ import dao.EstilosDAO;
 import dao.MarcaDAO;
 import dao.ModeloDAO;
 import dao.OficinaDAO;
-import entities.Estilo;
-import entities.Marca;
+import dao.VehiculoDAO;
 import entities.MiError;
-import entities.Modelo;
 import entities.Oficina;
 import entities.Renta;
+import entities.Vehiculo;
 import static gui.RentaVehiculo.cal;
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
-import javax.imageio.ImageIO;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -55,6 +50,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
     Date fecha2;
     int adicionales, cedula;
     int dias = -1;
+    int total;
     String nombre;
     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat horaFormat = new SimpleDateFormat("hh:mm:ss");
@@ -66,21 +62,8 @@ public class RentaVehiculo extends javax.swing.JFrame {
     ArrayList modelos = new ArrayList();
     ArrayList marcas = new ArrayList();
     ArrayList estilo = new ArrayList();
-    DefaultTableModel modelotab = new DefaultTableModel() {
-        @Override
-        public Class getColumnClass(int indiceColumna) {
-            Object ima = getValueAt(0, 9);
-            if (ima == null) {
-                return Object.class;
-            } else {
-                return ima.getClass();
-            }
-
-        }
-    };
 
     public RentaVehiculo(String nombreuser, int cedulauser) {
-        ;
         nombre = nombreuser;
         cedula = cedulauser;
         initComponents();
@@ -113,14 +96,6 @@ public class RentaVehiculo extends javax.swing.JFrame {
         cbxMarca.setVisible(false);
         cbxModelo.setVisible(false);
         cbxTransmi.setVisible(false);
-
-//        tabla.setModel(new DefaultTableModel(
-//                new Object[][]{},
-//                new String[]{
-//                    "", "", "", "", "", "", "", ""
-//                }
-//        ));
-//        btnRentar.setVisible(true);
     }
 
     public void adicionales() {
@@ -187,7 +162,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
     }
 
     public void llenarTable(ArrayList<String> placa, ArrayList<String> marca, ArrayList<String> modelo, ArrayList<String> estilo,
-            ArrayList<String> trans, ArrayList<String> año, ArrayList<String> precio, ArrayList<String> estado, ArrayList<ImageIcon> imagen) {
+            ArrayList<String> trans, ArrayList<String> año, ArrayList<String> precio, ArrayList<String> estado) {
         borrartable();
         DefaultTableModel temp3 = (DefaultTableModel) tabla.getModel();
         tabla.getModel();
@@ -279,7 +254,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
         ArrayList<String> año = null;
         ArrayList<String> precio = null;
         ArrayList<String> estado = null;
-        ArrayList<ImageIcon> imagen = null;
+        ArrayList<String> imagen = null;
 
         if (!rbtAño.isSelected() & !rbtMarca.isSelected() & !rbtModelo.isSelected() & !rbtEstilo.isSelected() & !rbtPrecio.isSelected() & !rbttransmision.isSelected()) {
 
@@ -298,7 +273,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 String sql = ("SELECT v.foto, v.placa, m.nombre_marca as marca, a.nombre_modelo as modelo,"
                         + " e.nombre_estilo as estilo , v.transmision, v.año, v.precio, v.estado "
                         + "FROM vehiculo v, marca m, modelo a, estilo e\n"
-                        + "WHERE m.nombre_marca = v.marca AND a.nombre_modelo = v.modelo AND e.nombre_estilo = v.estilo "
+                        + "WHERE m.nombre_marca = v.marca AND a.nombre_modelo = v.modelo AND e.nombre_estilo = v.estilo AND v.estado= 'Disponible'"
                         + "ORDER BY placa ASC");
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
@@ -311,20 +286,12 @@ public class RentaVehiculo extends javax.swing.JFrame {
                     año.add(rs.getString("año"));
                     precio.add(rs.getString("precio"));
                     estado.add(rs.getString("estado"));
-//
-//                    InputStream is;
-
-//                    is = rs.getBinaryStream("foto");
-//                    BufferedImage bi = ImageIO.read(is);
-//                    ImageIcon foto;
-//                    foto = new ImageIcon(bi);
-//                    imagen.add(foto);
                 }
             } catch (Exception e) {
                 System.out.println("Error de conexión" + e);
             }
 
-            llenarTable(placa, marca, modelo, estilo, trans, año, precio, estado, imagen);
+            llenarTable(placa, marca, modelo, estilo, trans, año, precio, estado);
 
         } else {
             System.out.println(sql());
@@ -350,18 +317,12 @@ public class RentaVehiculo extends javax.swing.JFrame {
                     año.add(rs.getString("año"));
                     precio.add(rs.getString("precio"));
                     estado.add(rs.getString("estado"));
-//                    InputStream is;
-//                    is = rs.getBinaryStream("foto");
-//                    BufferedImage bi = ImageIO.read(is);
-//                    ImageIcon foto;
-//                    foto = new ImageIcon(bi);
-//                    imagen.add(foto);
                 }
             } catch (Exception e) {
                 System.out.println("Error de conexión" + e);
             }
 
-            llenarTable(placa, marca, modelo, estilo, trans, año, precio, estado, imagen);
+            llenarTable(placa, marca, modelo, estilo, trans, año, precio, estado);
 
         }
         if (tabla.getRowCount() == 0) {
@@ -429,6 +390,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
         btnRentar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -449,14 +411,14 @@ public class RentaVehiculo extends javax.swing.JFrame {
         jPanel1.add(jDateRetiro, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 85, 151, 30));
 
         jLabel4.setText("Oficina de devolucion:");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 31, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
 
         CbxOfiDevol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CbxOfiDevolActionPerformed(evt);
             }
         });
-        jPanel1.add(CbxOfiDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(279, 28, -1, -1));
+        jPanel1.add(CbxOfiDevol, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, -1, -1));
 
         cbxHoraRE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "5:00 am", "5:15 am", "5:30 am", "5:45 am", "6:00 am", "6:15 am", "6:30 am", "6:45 am", "7:00 am", "7:15 am", "7:30 am", "7:45 am", "8:00 am", "8:15 am", "8:30 am", "8:45 am", "9:00 am", "9:15 am", "9:30 am", "9:45 am", "10:00 am", "10:15 am", "10:30 am", "10:45 am", "11:00 am", "11:15 am", "11:30 am", "11:45 am", "12:00 pm", "12:15 pm", "12:30 pm", "12:45 pm", "1:00 pm", "1:15 pm", "1:30 pm", "1:45 pm", "2:00 pm", "2:15 pm", "2:30 pm", "2:45 pm", "3:00 pm", "3:15 pm", "3:30 pm", "3:45 pm", "4:00 pm", "4:15 pm", "4:30 pm", "4:45 pm", "5:00 pm", "5:15 pm", "5:30 pm", "5:45 pm", "6:00 pm", "6:15 pm", "6:30 pm", "6:45 pm", "7:00 pm", "7:15 pm", "7:30 pm", "7:45 pm", "8:00 pm", "8:15 pm", "8:30 pm", "8:45 pm", "9:00 pm", "9:15 pm", "9:30 pm", "9:45 pm", "10:00 pm" }));
         jPanel1.add(cbxHoraRE, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 130, 80, -1));
@@ -590,16 +552,23 @@ public class RentaVehiculo extends javax.swing.JFrame {
 
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9"
+                "Placa", "Marca", "Modelo", "Estilo", "Transmision", "Precio", "Año", "Title 8"
             }
         ));
+        tabla.setToolTipText("");
         jScrollPane2.setViewportView(tabla);
+
+        jButton2.setBackground(new java.awt.Color(204, 0, 0));
+        jButton2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jButton2.setText("Cerrar Sesión");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -616,32 +585,41 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 773, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(90, 90, 90))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnRentar)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane2))
-                        .addContainerGap())))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 855, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(90, 90, 90))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblBienvenida, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton2)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(34, 34, 34)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(46, 46, 46)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRentar))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(45, Short.MAX_VALUE))
@@ -685,9 +663,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         buscaVehiculo();
-//        obtenerCantDias();
-//        adicionales();
-//        System.out.println(adicionales);
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void CbxOfiDevolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CbxOfiDevolActionPerformed
@@ -735,8 +711,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_rbtEstiloActionPerformed
 
     private void btnRentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentarActionPerformed
-        // TODO add your handling code here: 
-        String hora5, hora6;
+        // TODO add your handling code here:
         adicionales();
         obtenerCantDias();
         int row;
@@ -744,14 +719,14 @@ public class RentaVehiculo extends javax.swing.JFrame {
         TableModel tablaModelo = (TableModel) tabla.getModel();
         if (row != -1) {
             try {
-                
+
                 Renta re = new Renta();
-                
+
                 fecha1 = jDateRetiro.getDate();
                 fecha2 = jDateDevolu.getDate();
                 re.setFechaRetiro(dateFormat.format(fecha1));
                 re.setFechaDevolu(dateFormat.format(fecha2));
-                
+
                 re.setNombre(nombre);
                 re.setCedula(cedula);
                 re.setPlaca((String) tablaModelo.getValueAt(row, 0));
@@ -761,20 +736,49 @@ public class RentaVehiculo extends javax.swing.JFrame {
                 if (adicionales != 0) {
 
                     re.setPrecio((precio + adicionales) * dias);
+                    total = (precio + adicionales) * dias;
                 } else {
                     re.setPrecio((precio * dias));
+                    total = (precio * dias);
                 }
 
                 re.setHoraRetiro(cbxHoraRE.getSelectedItem().toString());
                 re.setHoraDevolu(cbxHoraDE.getSelectedItem().toString());
 
                 RentaBO rBO = new RentaBO();
-                if (rBO.registrarRenta(re)) {
-                    JOptionPane.showMessageDialog(null, "Renta registrada correctamente");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Intente nuevamente");
-                }
+                if (rBO.registrarRenta(re, false)) {
+                    Date fechainicio = jDateRetiro.getDate();
+                    Date fechafin = jDateDevolu.getDate();
+                    if ((fechainicio.before(fechafin))) {
+                        int seleccion = JOptionPane.showOptionDialog(
+                                null,
+                                "¿Desea rentar el vehiculo?\nPRECIO TOTAL: " + total,
+                                "FACTURA DE RENTA",
+                                JOptionPane.YES_NO_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null, // null para icono por defecto.
+                                new Object[]{"Rentar", "Cancelar"}, // null para YES, NO y CANCEL
+                                "");
+                        if (seleccion != -1) {
+                            if ((seleccion + 1) == 1) {
+                                if (rBO.registrarRenta(re, true)) {
+                                    VehiculoDAO ve = new VehiculoDAO();
+                                    ve.modificarEstado((String) tablaModelo.getValueAt(row, 0));
+                                    JOptionPane.showMessageDialog(null, "Renta registrada correctamente");
+                                    buscaVehiculo();
 
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Intente nuevamente");
+                                }
+                            } else {
+                            }
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "la fecha de retiro debe ser anterior a la devoluion");
+                    }
+
+                }
             } catch (MiError ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             } catch (Exception e) {
@@ -806,6 +810,13 @@ public class RentaVehiculo extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Ingrese solo Números");
         }
     }//GEN-LAST:event_txtAñoKeyTyped
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        Login lo = new Login();
+        lo.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -862,6 +873,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxModelo;
     private javax.swing.JComboBox<String> cbxTransmi;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private com.toedter.calendar.JDateChooser jDateDevolu;
     private com.toedter.calendar.JDateChooser jDateRetiro;
     private javax.swing.JLabel jLabel1;

@@ -724,6 +724,8 @@ public class registroVehiculo extends javax.swing.JFrame {
                 txtPrecio.setText("");
                 txtPlaca.setEnabled(true);
                 txtPlaca.setText("");
+                ImageIcon icono = new ImageIcon(getClass().getResource("/image/camara.png"));
+                btnFoto.setIcon(icono);
             } else {
                 JOptionPane.showMessageDialog(null, "Intente nuevamente");
             }

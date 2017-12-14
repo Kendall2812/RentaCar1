@@ -96,7 +96,7 @@ public class VehiculoDAO {
                 vehiculo.add(cargarVehiculo(rs));
             }
         } catch (Exception ex) {
-            throw new MiError("Problemas al cargar los usuarios");
+            throw new MiError("Problemas al cargar los vehiculos");
         }
         return vehiculo;
     }
@@ -162,4 +162,21 @@ public class VehiculoDAO {
         }
         return direccion;
     }
+      
+      public boolean modificarEstado (String placa){
+          try (Connection con = Conexion.conexion()) {
+            String sql = "update vehiculo SET estado = ? where placa = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(2,placa);
+            stmt.setString(1, "Ocupado");
+            
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException s) {
+            throw new MiError("Error al modificar");
+        } catch (Exception ex) {
+            throw new MiError("Problemas al cargar vehiculos");
+        }
+
+      }
 }

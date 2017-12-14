@@ -23,27 +23,27 @@ import java.util.ArrayList;
 public class RentaBO {
 
     public ArrayList extraerPorRangoFechas(Renta r) {
-        if (r.getFechaDevolu()== null) {
+        if (r.getFechaDevolu() == null) {
             throw new MiError("");
         }
-        if (r.getFechaRetiro()== null) {
+        if (r.getFechaRetiro() == null) {
             throw new MiError("");
         }
         RentaDAO idao = new RentaDAO();
         return idao.reporteDeRangoFechasRenta(r);
     }
 
-    public boolean registrarRenta(Renta u) {
+    public boolean registrarRenta(Renta u, boolean bus) {
         if (u.getNombre().isEmpty()) {
             throw new MiError("Nombre requerido");
         }
         if (u.getCedula() == 0) {
             throw new MiError("Cedula requerida");
         }
-        if (u.getFechaDevolu()== null) {
+        if (u.getFechaDevolu() == null) {
             throw new MiError("Fecha de devolucion requerida");
         }
-        if (u.getFechaRetiro()== null) {
+        if (u.getFechaRetiro() == null) {
             throw new MiError("Fecha de retiro requerida");
         }
         if (u.getHoraDevolu().isEmpty()) {
@@ -64,9 +64,12 @@ public class RentaBO {
         if (u.getPrecio() == 0) {
             throw new MiError("Precio requerido");
         }
-
-        RentaDAO idao = new RentaDAO();
-        return idao.insertarRenta(u);
+        if (bus) {
+            RentaDAO idao = new RentaDAO();
+            return idao.insertarRenta(u);
+        } else {
+            return true;
+        }
     }
 
     public ArrayList reporteUsuarioVehiculo(UsuAdm u) {

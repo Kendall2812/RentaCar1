@@ -6,12 +6,10 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import dao.UsuAdmDAO;
 import dao.Utilidades;
