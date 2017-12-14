@@ -58,7 +58,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         cargarPlacas();
     }
 
-    public void realizarAccion() {
+    public void realizarAccion() { //the method what it does is check what kind of action is going to be done  whether  to register or modify or delete vehicles
         System.out.println(tipoAccion);
         if (tipoAccion.equals("registrar")) {
             btnFoto.setEnabled(true);
@@ -94,7 +94,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         }
     }
 
-    public void cargarModelos() {
+    public void cargarModelos() {//this method is for load the models in the Combo Box
         ModeloDAO modelo = new ModeloDAO();
         modelos = modelo.cargarModelo();
         for (int x = 0; x < modelos.size(); x++) {
@@ -103,7 +103,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         }
     }
 
-    public void cargarMarcas() {
+    public void cargarMarcas() {//this method is for load the brands in the Combo Box
         MarcaDAO marca = new MarcaDAO();
         marcas = marca.cargarMarcas();
         for (int x = 0; x < marcas.size(); x++) {
@@ -112,7 +112,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         }
     }
 
-    public void cargarEstilo() {
+    public void cargarEstilo() {//this method is for load the styles in the Combo Box
         EstilosDAO esti = new EstilosDAO();
         estilo = esti.cargarEstilos();
         for (int x = 0; x < estilo.size(); x++) {
@@ -122,7 +122,7 @@ public class registroVehiculo extends javax.swing.JFrame {
 
     }
 
-    public void borrartable() {
+    public void borrartable() {//this method the what does is delete the contents of the table 
         int num = tabla.getRowCount();
         try {
             if (num > 0) {
@@ -136,7 +136,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         }
     }
 
-    public void cargarTabla() {
+    public void cargarTabla() {//this method the what does is load the information of the vehicle in the table
         VehiculoDAO dao = new VehiculoDAO();
         LinkedList<Vehiculo> vehi = dao.cargarTodo1();
         for (Vehiculo vehiculo : vehi) {
@@ -147,7 +147,7 @@ public class registroVehiculo extends javax.swing.JFrame {
         }
     }
 
-    public void cargarPlacas() {
+    public void cargarPlacas() {//this method the what does is load the plates of the vehicles in the combo box
         VehiculoDAO dao = new VehiculoDAO();
         LinkedList<Vehiculo> vehi = dao.cargarTodo1();
         for (Vehiculo vehiculo : vehi) {
@@ -618,7 +618,7 @@ public class registroVehiculo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
-        // TODO add your handling code here:
+        // the action of the button is to look in the folders of the computer the image of the vehicle that is going to register
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Image", "jpg", "png");
         fcFoto.setFileFilter(filtro);
         int option = fcFoto.showOpenDialog(this);
@@ -660,7 +660,7 @@ public class registroVehiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAnoKeyTyped
 
     private void btnFoto3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFoto3ActionPerformed
-        // TODO add your handling code here:
+        // the action of the button is to look in the folders of the computer the image of the vehicle that is going to register
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Image", "jpg", "png");
         fcFoto.setFileFilter(filtro);
         int option = fcFoto.showOpenDialog(this);
@@ -703,7 +703,7 @@ public class registroVehiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_cbxPlacaSelecActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
+        //the action of the button is to capture all the information that is found in the fields of the graphical interface to send it to save in the database
         Vehiculo vehi = new Vehiculo();
         try {
             vehi.setFoto(img2);
@@ -772,7 +772,7 @@ public class registroVehiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPrecio3KeyTyped
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
+        // the action of the button is to capture the plate selected in the table to send it to the database and delete the information of that vehicle
         int row;
         row = tabla.getSelectedRow();
         TableModel tablaModelo = (TableModel) tabla.getModel();
@@ -801,7 +801,7 @@ public class registroVehiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        // the action of the button is to capture all the edited information that is in the fields of the graphical interface to send it to save in the database
         Vehiculo vehi = new Vehiculo();
         try {
             vehi.setFoto(img2);

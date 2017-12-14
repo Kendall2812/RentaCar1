@@ -35,7 +35,7 @@ public class registroModelo extends javax.swing.JFrame {
         realizarAccion();
     }
 
-    public void realizarAccion() {
+    public void realizarAccion() {//the method what it does is check what kind of action is going to be done  whether  to register or modify or delete models
         System.out.println(tipoAccion);
         if (tipoAccion.equals("registrar")) {
             txtNombreModelo.setEnabled(true);
@@ -56,7 +56,7 @@ public class registroModelo extends javax.swing.JFrame {
         }
     }
 
-    public void cargarModelos() {
+    public void cargarModelos() {//this method is for load the models in the Combo Box
         ModeloDAO modelo = new ModeloDAO();
         if (tipoAccion.equals("editar")) {
             modelos = modelo.cargarModelo();
@@ -74,7 +74,7 @@ public class registroModelo extends javax.swing.JFrame {
         }
     }
 
-    public void registrarModelo() {
+    public void registrarModelo() {//this method is for register the models 
         Modelo r = new Modelo();
         try {
             r.setNombre(txtNombreModelo.getText());
@@ -91,7 +91,7 @@ public class registroModelo extends javax.swing.JFrame {
         }
     }
 
-    public void editarModelo() {
+    public void editarModelo() {//this method is for modify the models
         modeloEditado = txtEditarModelo.getText();
         Modelo mod = new Modelo();
         try {
@@ -106,7 +106,7 @@ public class registroModelo extends javax.swing.JFrame {
         }
     }
 
-    public void eliminarModelo() {
+    public void eliminarModelo() {//this method is for delete the models 
         modeloEliminado = jCB1EliminarModelos.getSelectedItem().toString();
 
         Modelo es = new Modelo();

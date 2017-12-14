@@ -32,7 +32,7 @@ public class registroOficina extends javax.swing.JFrame {
         this.setTitle("Informacion de las Oficinas.");
         realizarAccion();
     }
-    public void realizarAccion(){
+    public void realizarAccion(){//the method what it does is check what kind of action is going to be done  whether  to register or modify or delete offices
         System.out.println(tipoAccion);
         if (tipoAccion.equals("registrar")) {
             txtNombreOficina.setEnabled(true);
@@ -52,7 +52,7 @@ public class registroOficina extends javax.swing.JFrame {
             cargarOficinas();
         }
     }
-    public void cargarOficinas(){
+    public void cargarOficinas(){//this method is for load the offices in the Combo Box
         OficinaDAO oficina = new OficinaDAO();
         if(tipoAccion.equals("editar")){
             oficinas = oficina.cargarOficina();
@@ -69,7 +69,7 @@ public class registroOficina extends javax.swing.JFrame {
             }
         }
     }
-    public void registroOficina(){
+    public void registroOficina(){//this method is for register the offices 
         Oficina ofic = new Oficina();
         try{
             ofic.setNombre(txtNombreOficina.getText());
@@ -81,7 +81,7 @@ public class registroOficina extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio esta vacio. " + e);
         }
     }
-    public void editarOficina(){
+    public void editarOficina(){//this method is for modify the offices
         oficinaEditada = txtOficinaEditada.getText();
         Oficina ofi = new Oficina();
         try {
@@ -95,7 +95,7 @@ public class registroOficina extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
         }
     }
-    public void eliminarOficina(){
+    public void eliminarOficina(){//this method is for delete the offices 
         modeloEliminado = jCB1EliminarOficinas.getSelectedItem().toString();
         
         Oficina ofi = new Oficina();

@@ -52,8 +52,8 @@ public class reportePorRangoFechasVehiculosAlquilados extends javax.swing.JFrame
         this.setTitle("Vehiculos Alquilados Por Rango de Fecha.");
     }
 
-    public void reporteRangoFecha() throws FileNotFoundException {
-        nombre = "Reporte por Rango de Fechas.";
+    public void reporteRangoFecha() throws FileNotFoundException { //the method what it does is to capture the two selected dates on the screen to pass it to the query of the database 
+        nombre = "Reporte por Rango de Fechas.";                   //and thus obtain the information of the vehicles that were rented in the range of those two dates.  
         fecha1 = jDateChFechaInicio.getDate();
         fecha2 = jDateChFechaFinal.getDate();
         Renta fechas = new Renta();

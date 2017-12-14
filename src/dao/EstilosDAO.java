@@ -17,7 +17,7 @@ import java.util.ArrayList;
  *
  * @author Kendall
  */
-public class EstilosDAO {
+public class EstilosDAO {//this method is what does is receiving the information of the graphical interface for then save it in database
     public boolean insertarEstilo(Estilo es) throws SQLException{
         try(Connection con = Conexion.conexion()){
             String sql = "insert into estilo(nombre_estilo)"
@@ -30,7 +30,7 @@ public class EstilosDAO {
             throw new MiError("El estilo de vehiculo ya se encuentra registrado.");
         } 
     }
-    public ArrayList cargarEstilos() {
+    public ArrayList cargarEstilos() {//this method  what does is select every one of the styles it in database for then send them to the graphic interface 
         ArrayList estilos = new ArrayList();
         try (Connection con = Conexion.conexion()) {
             String sql = "select nombre_estilo from estilo order by nombre_estilo";
@@ -46,7 +46,7 @@ public class EstilosDAO {
 
     }
 
-    public boolean modificarEstilo(Estilo mod) throws SQLException{
+    public boolean modificarEstilo(Estilo mod) throws SQLException{//this method is what does is receiving the information edited of the graphical interface for then save it in database
         String nombre = mod.getNombre();
         String modificado = mod.getNombremodificado();
         try(Connection con = Conexion.conexion()){
@@ -60,7 +60,7 @@ public class EstilosDAO {
             throw new MiError("Falla al momento de modificar estilo.");
         }
     }
-    public boolean eliminarEstilo(Estilo eli) throws SQLException{
+    public boolean eliminarEstilo(Estilo eli) throws SQLException{//this method  what does is receiving the style select in the graphical interface for then delete it in database.
         try(Connection con = Conexion.conexion()){
             String sql = "DELETE FROM estilo WHERE nombre_estilo = ?";
             PreparedStatement stmt = con.prepareStatement(sql);

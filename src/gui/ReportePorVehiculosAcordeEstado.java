@@ -37,7 +37,8 @@ public class ReportePorVehiculosAcordeEstado extends javax.swing.JFrame {
         this.setTitle("Consulta por estado de Vehiculo.");
         this.setLocationRelativeTo(null);
     }
-    public void imprimirVehiculosAcordeEstado() {
+    public void imprimirVehiculosAcordeEstado() { // the method what it does is capture the selected state on the screen and to pass it 
+                                                  //to the consult the database and thus be able to obtain the information of the vehicles that are in that state.
         String nombre = "Reporte de Vehiculos Por Estado.";
         estado = jCBTipoEstado.getSelectedItem().toString();
         if (estado.equals("Seleccionar")) {

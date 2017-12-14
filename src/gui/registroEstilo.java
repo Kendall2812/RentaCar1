@@ -32,7 +32,7 @@ public class registroEstilo extends javax.swing.JFrame {
         this.setTitle("Informacion del Estilo Vehiculo.");
         reliazarAccionEstilo();
     }
-    public void reliazarAccionEstilo() {
+    public void reliazarAccionEstilo() {//the method what it does is check what kind of action is going to be done  whether  to register or modify or delete styles
         System.out.println(tipoAccion);
 
         if (tipoAccion.equals("registrar")) {
@@ -53,7 +53,7 @@ public class registroEstilo extends javax.swing.JFrame {
             editarEstilo();
         }
     }
-    public void registrarEstilo() {
+    public void registrarEstilo() {//this method is for register the styles
         Estilo es = new Estilo();
         try {
             es.setNombre(txtNombreEstilo.getText());
@@ -65,7 +65,7 @@ public class registroEstilo extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio esta vacio. " + e);
         }
     }
-    public void editarEstilo(){
+    public void editarEstilo(){ //this method is for load the styles in the Combo Box
         
         EstilosDAO esti = new EstilosDAO();
         if(tipoAccion.equals("editar")){
@@ -83,7 +83,7 @@ public class registroEstilo extends javax.swing.JFrame {
             }
         }
     }
-    public void guardarEstiloEditado1() {
+    public void guardarEstiloEditado1() {//this method is for modify the styles
         estiloEditado = txtEdiatarEstilo.getText();
         Estilo es = new Estilo();
         try {
@@ -97,7 +97,7 @@ public class registroEstilo extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
         }
     }
-    public void eliminarEstilo(){
+    public void eliminarEstilo(){//this method is for delete the styles
         estiloEliminar = jCB1EliminarEstilo.getSelectedItem().toString();
         
         Estilo es = new Estilo();

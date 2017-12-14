@@ -18,6 +18,7 @@ import java.util.ArrayList;
  *
  * @author Kendall
  */
+
 public class OficinaDAO {
     public boolean registroOficina(Oficina ofi) throws SQLException{
         try (Connection con = Conexion.conexion()) {

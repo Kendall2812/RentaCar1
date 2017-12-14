@@ -32,7 +32,7 @@ public class registroMarca extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         realizarAccion();
     }
-    public void realizarAccion(){
+    public void realizarAccion(){//the method what it does is check what kind of action is going to be done  whether  to register or modify or delete brands
         System.out.println(tipoAccion);
         if (tipoAccion.equals("registrar")) {
             txtNombreMarca.setEnabled(true);
@@ -52,7 +52,7 @@ public class registroMarca extends javax.swing.JFrame {
             cargarMarcas();
         }
     }
-    public void registroMarca(){
+    public void registroMarca(){//this method is for register the brands 
         Marca marc = new Marca();
         try{
             marc.setNombre(txtNombreMarca.getText());
@@ -64,7 +64,7 @@ public class registroMarca extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio esta vacio. " + e);
         }
     }
-    public void cargarMarcas(){
+    public void cargarMarcas(){//this method is for load the brands in the Combo Box
         MarcaDAO marca = new MarcaDAO();
         if(tipoAccion.equals("editar")){
             marcas = marca.cargarMarcas();
@@ -81,7 +81,7 @@ public class registroMarca extends javax.swing.JFrame {
             }
         }
     }
-    public void editarMarca(){
+    public void editarMarca(){//this method is for modify the brands
         marcaEditada = txtMarcaEditada.getText();
         Marca es = new Marca();
         try {
@@ -95,7 +95,7 @@ public class registroMarca extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error el espacio no debe quedar vacio. " + e);
         }
     }
-    public void eliminarMarca(){
+    public void eliminarMarca(){//this method is for delete the brands 
         marcaEliminada = jCB1EliminarMarca.getSelectedItem().toString();
         
         Marca es = new Marca();

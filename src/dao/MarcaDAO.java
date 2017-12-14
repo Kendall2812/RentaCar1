@@ -17,6 +17,7 @@ import java.util.ArrayList;
  *
  * @author Kendall
  */
+
 public class MarcaDAO {
     public boolean registroMarca(Marca mar)throws SQLException{
         try (Connection con = Conexion.conexion()) {

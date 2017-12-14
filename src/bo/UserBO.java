@@ -14,6 +14,8 @@ import java.util.ArrayList;
  *
  * @author jenni
  */
+//The methods of this class what they do is verify that each of the variables that are used contain information for then call the method where the information 
+//will be stored in the database and otherwise if the variable does not contain information it will be is generate a mistake.
 public class UserBO {
 
     public boolean registrarUser(UsuAdm u) {

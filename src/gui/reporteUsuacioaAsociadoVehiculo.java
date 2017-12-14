@@ -43,8 +43,8 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Vehiculo asocido a Usuario.");
     }
-    public void reporteAsociacion() throws FileNotFoundException {
-        String nombre = "Reporte Vehiculo asociado a Usuario.";
+    public void reporteAsociacion() throws FileNotFoundException {//the method what it does is capture the number of the id that was digitized on the screen 
+        String nombre = "Reporte Vehiculo asociado a Usuario.";   //to pass it to the query of the database and thus obtain the information
         try {
             UsuAdm u = new UsuAdm();
             u.setCedula(Integer.parseInt(txtCedula.getText()));
@@ -60,7 +60,7 @@ public class reporteUsuacioaAsociadoVehiculo extends javax.swing.JFrame {
                 
                 Paragraph texto = new Paragraph();
                 texto.add("Informacion del vehiculo asociado al usuario.");
-                texto.setAlignment(Element.ALIGN_MIDDLE);
+                texto.setAlignment(Element.ALIGN_CENTER);
                 documento.add(texto);
                 
                 for(int x = 0; x < datosUsuarioVehiculo.size(); x++){
