@@ -30,6 +30,7 @@ public class VehiculoDAO {
 
     public boolean insertarVehi(Vehiculo v) {
         try (Connection con = Conexion.conexion()) {
+            
             String sql = "insert into vehiculo(placa,marca,modelo,transmision,año,estilo,precio,foto,estado,direccion_foto) "
                     + "values (?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -46,7 +47,6 @@ public class VehiculoDAO {
             stmt.setBinaryStream(8, fis);
             stmt.setString(9, v.getEstado());
             stmt.setString(10, v.getDireccion_foto());
-
             return stmt.executeUpdate() > 0;
 
         } catch (SQLException s) {
