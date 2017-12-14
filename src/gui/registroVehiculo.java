@@ -697,6 +697,7 @@ public class registroVehiculo extends javax.swing.JFrame {
                 cbxTransmis3.setSelectedItem(vehiculo.getTransmision());
                 img2 = vehiculo.getFoto();
                 btnFoto3.setIcon(new ImageIcon(vehiculo.getFoto().getScaledInstance(btnFoto3.getWidth(), btnFoto3.getHeight(), Image.SCALE_DEFAULT)));
+                direccionFoto = vehiculo.getDireccion_foto();
             }
 
         }

@@ -114,6 +114,7 @@ public class VehiculoDAO {
         InputStream fis = rs.getBinaryStream("foto");
         imgdb = ImageIO.read(fis);
         u.setFoto(imgdb);
+        u.setDireccion_foto(rs.getString("direccion_foto"));
         return u;
 
     }
