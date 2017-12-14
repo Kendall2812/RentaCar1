@@ -61,9 +61,7 @@ public class RentaBO {
         if (u.getPlaca().isEmpty()) {
             throw new MiError("Placa requerida");
         }
-        if (u.getPrecio() == 0) {
-            throw new MiError("Precio requerido");
-        }
+        
         if (bus) {
             RentaDAO idao = new RentaDAO();
             return idao.insertarRenta(u);

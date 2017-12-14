@@ -668,7 +668,7 @@
                 <Column editable="true" title="Transmision" type="java.lang.Object"/>
                 <Column editable="true" title="Precio" type="java.lang.Object"/>
                 <Column editable="true" title="A&#xf1;o" type="java.lang.Object"/>
-                <Column editable="true" title="Title 8" type="java.lang.Object"/>
+                <Column editable="true" title="Estado" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>

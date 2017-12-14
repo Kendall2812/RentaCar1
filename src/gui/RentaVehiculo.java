@@ -18,6 +18,7 @@ import entities.Renta;
 import entities.Vehiculo;
 import static gui.RentaVehiculo.cal;
 import java.awt.Color;
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -52,6 +53,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
     int dias = -1;
     int total;
     String nombre;
+    int precio;
     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat horaFormat = new SimpleDateFormat("hh:mm:ss");
     SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
@@ -151,7 +153,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
         if (jDateRetiro.getDate() != null && jDateDevolu.getDate() != null) {
             Calendar fecha_inicio = jDateRetiro.getCalendar();
             Calendar fecha_final = jDateDevolu.getCalendar();
-            while (fecha_inicio.before(fecha_final) || fecha_inicio.equals(fecha_final)) {
+            while (fecha_inicio.before(fecha_final)) {
                 dias++;
                 fecha_inicio.add(Calendar.DATE, 1);
             }
@@ -555,7 +557,7 @@ public class RentaVehiculo extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Placa", "Marca", "Modelo", "Estilo", "Transmision", "Precio", "Año", "Title 8"
+                "Placa", "Marca", "Modelo", "Estilo", "Transmision", "Precio", "Año", "Estado"
             }
         ));
         tabla.setToolTipText("");
@@ -712,44 +714,40 @@ public class RentaVehiculo extends javax.swing.JFrame {
 
     private void btnRentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentarActionPerformed
         // TODO add your handling code here:
-        adicionales();
         obtenerCantDias();
+        adicionales();
+
         int row;
         row = tabla.getSelectedRow();
         TableModel tablaModelo = (TableModel) tabla.getModel();
         if (row != -1) {
             try {
-
                 Renta re = new Renta();
 
                 fecha1 = jDateRetiro.getDate();
                 fecha2 = jDateDevolu.getDate();
+
                 re.setFechaRetiro(dateFormat.format(fecha1));
                 re.setFechaDevolu(dateFormat.format(fecha2));
-
                 re.setNombre(nombre);
                 re.setCedula(cedula);
                 re.setPlaca((String) tablaModelo.getValueAt(row, 0));
                 re.setOfiRetiro((String) CbxOfiRetiro.getSelectedItem());
                 re.setOfiDevolu((String) CbxOfiDevol.getSelectedItem());
-                int precio = Integer.valueOf(tablaModelo.getValueAt(row, 5).toString());
-                if (adicionales != 0) {
+                precio = Integer.valueOf(tablaModelo.getValueAt(row, 5).toString());
+                if (dias > 0) {
+                    if (adicionales == 0) {
+                        re.setPrecio(precio * dias);
+                        total = (precio * dias);
+                    } else if (adicionales != 0) {
+                        re.setPrecio((precio + adicionales) * dias);
+                        total = ((precio + adicionales) * dias);
+                    }
+                    re.setHoraRetiro(cbxHoraRE.getSelectedItem().toString());
+                    re.setHoraDevolu(cbxHoraDE.getSelectedItem().toString());
 
-                    re.setPrecio((precio + adicionales) * dias);
-                    total = (precio + adicionales) * dias;
-                } else {
-                    re.setPrecio((precio * dias));
-                    total = (precio * dias);
-                }
-
-                re.setHoraRetiro(cbxHoraRE.getSelectedItem().toString());
-                re.setHoraDevolu(cbxHoraDE.getSelectedItem().toString());
-
-                RentaBO rBO = new RentaBO();
-                if (rBO.registrarRenta(re, false)) {
-                    Date fechainicio = jDateRetiro.getDate();
-                    Date fechafin = jDateDevolu.getDate();
-                    if ((fechainicio.before(fechafin))) {
+                    RentaBO rBO = new RentaBO();
+                    if (rBO.registrarRenta(re, false)) {
                         int seleccion = JOptionPane.showOptionDialog(
                                 null,
                                 "¿Desea rentar el vehiculo?\nPRECIO TOTAL: " + total,
@@ -771,19 +769,24 @@ public class RentaVehiculo extends javax.swing.JFrame {
                                     JOptionPane.showMessageDialog(null, "Intente nuevamente");
                                 }
                             } else {
+                                adicionales=0;
+                                dias=-1;
                             }
                         }
 
-                    } else {
-                        JOptionPane.showMessageDialog(null, "la fecha de retiro debe ser anterior a la devoluion");
                     }
 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Fechas incorrectas");
+                    dias=-1;
                 }
+
             } catch (MiError ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
-            } catch (Exception e) {
+            } catch (HeadlessException | NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, e);
             }
+
         } else {
             JOptionPane.showMessageDialog(null, "Debe seleccionar en la tabla el vehiculo que desea");
         }
