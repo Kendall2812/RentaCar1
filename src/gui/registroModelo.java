@@ -113,7 +113,7 @@ public class registroModelo extends javax.swing.JFrame {
         try {
             es.setNombre(modeloEliminado);
             ModeloBO mo = new ModeloBO();
-            if (mo.EliminarMarca(es)) {
+            if (mo.EliminarModelo(es)) {
                 JOptionPane.showMessageDialog(null, "Se elimino con exito.");
             }
 

@@ -24,7 +24,7 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class Utilidades {
 
-    public String Encriptar(String texto) {
+    public String Encriptar(String texto) { //It is the method in charge of encrypting the password of the users so that it can be saved in the database.
 
         String secretKey = "qualityinfosolutions"; //llave para encriptar datos
         String base64EncryptedString = "";
@@ -49,7 +49,7 @@ public class Utilidades {
         return base64EncryptedString;
     }
 
-    public String Desencriptar(String textoEncriptado) throws Exception {
+    public String Desencriptar(String textoEncriptado) throws Exception {//It is the method in charge of decrypting the password of the users so that later they can use it in the verification of data and thus they can have access to the program
 
         String secretKey = "qualityinfosolutions"; //llave para encriptar datos
         String base64EncryptedString = "";

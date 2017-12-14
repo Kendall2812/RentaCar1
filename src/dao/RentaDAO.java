@@ -36,7 +36,8 @@ import javax.swing.JOptionPane;
  */
 public class RentaDAO {
 
-    public ArrayList reporteDeRangoFechasRenta(Renta rent) {
+    public ArrayList reporteDeRangoFechasRenta(Renta rent) {//This method is to receive the two selected dates on the screen to then provide the database that 
+                                                            //which are the rents of the vehicles that are in the middle of those two dates
         ArrayList fechas = new ArrayList();
         Date fecha1, fecha2;
         java.sql.Date fechaIncio = null;
@@ -70,7 +71,7 @@ public class RentaDAO {
         return fechas;
     }
 
-    public boolean insertarRenta(Renta r) {
+    public boolean insertarRenta(Renta r) {//This method the than does is receive the information of the graphic interface for then save it in the database. 
         Date fecha1, fecha2; 
         java.sql.Date fechaIncio = null;
         java.sql.Date fechaFinal = null;
@@ -113,7 +114,8 @@ public class RentaDAO {
         }
     }
     
-    public ArrayList reporteVehiculoAsignadoUsuario(UsuAdm u){
+    public ArrayList reporteVehiculoAsignadoUsuario(UsuAdm u){ //The method the that does is receive the ID of the person entered on the screen to then create a query to the income table to which an INTERNAL UNION is created, and another to the user table to know which vehicle is rented 
+                                                              //by that person and extract the information from the vehicle and that of the person.
         ArrayList informacionUsuarioVehiculo = new ArrayList();
         try (Connection con = Conexion.conexion()) {
             String sql = "SELECT vehiculo.placa as placa, vehiculo.marca as marca, vehiculo.modelo as modelo, vehiculo.transmision as transmision, vehiculo.año as año, vehiculo.estilo as estilo, vehiculo.precio as precio, vehiculo.direccion_foto as direccion_foto,"

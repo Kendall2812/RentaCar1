@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 
 public class OficinaDAO {
-    public boolean registroOficina(Oficina ofi) throws SQLException{
+    public boolean registroOficina(Oficina ofi) throws SQLException{//this method is what does is receiving the information of the graphical interface for then save it in database
         try (Connection con = Conexion.conexion()) {
             String sql = "insert into oficina(nombre_oficina)"
                     + "values (?)";
@@ -33,7 +33,7 @@ public class OficinaDAO {
         }
     }
     
-    public LinkedList<Oficina> cargarTodo() {
+    public LinkedList<Oficina> cargarTodo() {//this method  what does is select every one of the offices it in database for then send them to the graphic interface 
         LinkedList<Oficina> oficinas = new LinkedList<>();
         try (Connection con = Conexion.conexion()) {
             String sql = "select nombre_oficina from oficina";
@@ -48,12 +48,12 @@ public class OficinaDAO {
         return oficinas;
     }
     
-    public Oficina cargarOficinas(ResultSet rs) throws SQLException, IOException {
+    public Oficina cargarOficinas(ResultSet rs) throws SQLException, IOException {//this method  what does is select every one of the offices it in database for then send them to the graphic interface
         Oficina o = new Oficina();  
         o.setNombre(rs.getString("nombre_oficina"));
         return o;
     }
-    public ArrayList cargarOficina() {
+    public ArrayList cargarOficina() {//this method  what does is select every one of the offices it in database for then send them to the graphic interface
         ArrayList oficina = new ArrayList();
         try (Connection con = Conexion.conexion()) {
             String sql = "select nombre_oficina from oficina order by nombre_oficina";
@@ -67,7 +67,7 @@ public class OficinaDAO {
         }
         return oficina;
     }
-    public boolean modificarOficina(Oficina ofi) throws SQLException{
+    public boolean modificarOficina(Oficina ofi) throws SQLException{//this method is what does is receiving the information edited of the graphical interface for then save it in database
         String nombre = ofi.getNombre();
         String modificado = ofi.getNombremodificado();
         try(Connection con = Conexion.conexion()){
@@ -81,7 +81,7 @@ public class OficinaDAO {
             throw new MiError("Falla al momento de modificar oficina.");
         }
     }
-    public boolean eliminarOficina(Oficina ofi) throws SQLException {
+    public boolean eliminarOficina(Oficina ofi) throws SQLException {//this method  what does is receiving the office select in the graphical interface for then delete it in database.
         try (Connection con = Conexion.conexion()) {
             String sql = "DELETE FROM oficina WHERE nombre_oficina = ?";
             PreparedStatement stmt = con.prepareStatement(sql);

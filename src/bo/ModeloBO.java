@@ -34,9 +34,9 @@ public class ModeloBO {
             throw new MiError("");
         }
         ModeloDAO moddao = new ModeloDAO();
-        return moddao.modificarMarca(mod);
+        return moddao.modificarModelo(mod);
     }
-    public boolean EliminarMarca(Modelo eli) throws SQLException {
+    public boolean EliminarModelo(Modelo eli) throws SQLException {
         if (eli.getNombre().isEmpty()) {
             throw new MiError("");
         }

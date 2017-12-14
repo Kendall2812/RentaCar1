@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class ModeloDAO {
 
-    public boolean insertarModelo(Modelo r) throws SQLException {
+    public boolean insertarModelo(Modelo r) throws SQLException {//this method is what does is receiving the information of the graphical interface for then save it in database
         try (Connection con = Conexion.conexion()) {
             String sql = "insert into modelo(nombre_modelo)"
                     + "values (?)";
@@ -33,7 +33,7 @@ public class ModeloDAO {
         }
 
     }
-    public ArrayList cargarModelo() {
+    public ArrayList cargarModelo() {//this method  what does is select every one of the models it in database for then send them to the graphic interface 
         ArrayList modelo = new ArrayList();
         try (Connection con = Conexion.conexion()) {
             String sql = "select nombre_modelo from modelo order by nombre_modelo";
@@ -47,7 +47,7 @@ public class ModeloDAO {
         }
         return modelo;
     }
-    public boolean modificarMarca(Modelo mod) throws SQLException{
+    public boolean modificarModelo(Modelo mod) throws SQLException{//this method is what does is receiving the information edited of the graphical interface for then save it in database
         String nombre = mod.getNombre();
         String modificado = mod.getNombremodificado();
         try(Connection con = Conexion.conexion()){
@@ -61,7 +61,7 @@ public class ModeloDAO {
             throw new MiError("Falla al momento de modificar modelo.");
         }
     }
-    public boolean eliminarModelo(Modelo eli) throws SQLException {
+    public boolean eliminarModelo(Modelo eli) throws SQLException {//this method  what does is receiving the model select in the graphical interface for then delete it in database.
         try (Connection con = Conexion.conexion()) {
             String sql = "DELETE FROM modelo WHERE nombre_modelo = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
